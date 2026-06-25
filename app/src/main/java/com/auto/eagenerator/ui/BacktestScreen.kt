@@ -29,6 +29,7 @@ import kotlin.math.roundToInt
 enum class ImportChannel { PASTE, SAMPLE, ONLINE, URL, FILE }
 enum class DataSource { EASTMONEY, YAHOO, BINANCE, FRANKFURTER }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BacktestScreen(
     cfg: StrategyConfig,
@@ -394,7 +395,7 @@ fun BacktestScreen(
             }
             if (rpt.trades.isNotEmpty()) {
                 item { Spacer(Modifier.height(4.dp)); Text("最近交易:", fontWeight = FontWeight.Bold, fontSize = 13.sp) }
-                rpt.trades.takeLast(10).reversed().forEach { t ->
+                for (t in rpt.trades.takeLast(10).reversed()) {
                     val color = if (t.profit >= 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                     item {
                         Row(Modifier.fillMaxWidth()) {
