@@ -587,10 +587,7 @@ object Mql4Generator {
         append("   }\n}\n\n")
         append("void CalcSLTP(bool isBuy, double ep, double &sl, double &tp) {\n")
         c.exits.forEach { ex ->
-            when (ex.exitType) {
-                ExitType.FIXED_SLTP -> append("   sl = InpX${ex.id}_SL > 0 ? (isBuy ? ep - InpX${ex.id}_SL * Point : ep + InpX${ex.id}_SL * Point) : 0;\n   tp = InpX${ex.id}_TP > 0 ? (isBuy ? ep + InpX${ex.id}_TP * Point : ep - InpX${ex.id}_TP * Point) : 0;\n")
-                else -> {}
-            }
+            when (ex.exitType) { ExitType.FIXED_SLTP -> append("   sl = InpX${ex.id}_SL > 0 ? (isBuy ? ep - InpX${ex.id}_SL * Point : ep + InpX${ex.id}_SL * Point) : 0;\n   tp = InpX${ex.id}_TP > 0 ? (isBuy ? ep + InpX${ex.id}_TP * Point : ep - InpX${ex.id}_TP * Point) : 0;\n") }
         }
         append("}\n")
     }
