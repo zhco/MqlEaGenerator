@@ -116,7 +116,7 @@ object BacktestEngine {
     // ─── 运行回测 ───
     fun run(csv: String, config: StrategyConfig): BTReport {
         val candles = parseCsv(csv)
-        if (candles.size < 100) return BTReport(config.strategyName, "", "", 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, emptyList(), emptyList())
+        if (candles.size < 100) return BTReport(config.strategyName, "", "", 0, 0, 0, 0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, emptyList(), emptyList())
 
         val bufs = precompute(candles, config)
         val n = candles.size
