@@ -55,7 +55,7 @@ object Optimizer {
             for ((idx, params) in grid.withIndex()) {
                 val modCfg = applyParams(config, params)
                 val report = BacktestEngine.run(csv, modCfg)
-                results += OptResult(params, report.netProfit, report.winRate, report.sharpeRatio, report.maxDrawdownPct, report.totalTrades)
+                results += OptResult(params = params, netProfit = report.netProfit, winRate = report.winRate, sharpe = report.sharpeRatio, maxDD = report.maxDrawdownPct, trades = report.totalTrades)
             }
         }
         val sorted = results.sortedByDescending { it.sharpe } // 以夏普比率为优化目标

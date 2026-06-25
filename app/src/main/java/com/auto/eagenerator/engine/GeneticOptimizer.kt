@@ -113,7 +113,7 @@ object GeneticOptimizer {
             genes = ind.genes.mapIndexed { i, g ->
                 if (rng.nextDouble() < adaptiveRate) {
                     val pg = genes[i]
-                    val delta = (pg.max - pg.min) * 0.1 * rng.nextGaussian()
+                    val delta = (pg.max - pg.min) * 0.1 * nextGaussian()
                     snapToGrid(g + delta, pg)
                 } else g
             }
@@ -127,7 +127,7 @@ object GeneticOptimizer {
         } else clamped
     }
 
-    private fun rng.nextGaussian(): Double {
+    private fun nextGaussian(): Double {
         var u1: Double
         var u2: Double
         do { u1 = rng.nextDouble() } while (u1 == 0.0)

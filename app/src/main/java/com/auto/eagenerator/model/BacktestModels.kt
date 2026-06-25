@@ -33,4 +33,5 @@ data class OptResult(
 data class OptReport(
     val strategyName: String = "", val paramRanges: List<ParamRange> = emptyList(),
     val totalRuns: Int = 0, val elapsedMs: Long = 0,
-    val best: OptResult? = null, val top10: List<OptResult> = emptyList(),
+    val best: OptResult? = null, val top10: List<OptResult> = emptyList()
+)
