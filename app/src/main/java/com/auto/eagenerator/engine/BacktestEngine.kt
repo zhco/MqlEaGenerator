@@ -146,27 +146,27 @@ object BacktestEngine {
                             if (pos.tp > 0 && curPrice >= pos.tp) { balance += calcPL(pos, curPrice, spread); closed = true }
                         }
                         ExitType.BREAKEVEN -> {
-                            if (profitPips >= exit.rule.breakevenPips && pos.sl == 0.0) pos.sl = pos.openPrice + if (pos.dir == 1) exit.rule.breakevenLock * c.close * 0.0001 else -exit.rule.breakevenLock * c.close * 0.0001
+                            if (profitPips >= exit.breakevenPips && pos.sl == 0.0) pos.sl = pos.openPrice + if (pos.dir == 1) exit.breakevenLock * c.close * 0.0001 else -exit.breakevenLock * c.close * 0.0001
                             if (pos.sl > 0 && curPrice <= pos.sl) { balance += calcPL(pos, curPrice, spread); closed = true }
                         }
                         ExitType.TRAILING -> {
-                            if (profitPips >= exit.rule.trailingStart) {
-                                val newSL = curPrice - if (pos.dir == 1) exit.rule.trailingStep * c.close * 0.0001 else -exit.rule.trailingStep * c.close * 0.0001
+                            if (profitPips >= exit.trailingStart) {
+                                val newSL = curPrice - if (pos.dir == 1) exit.trailingStep * c.close * 0.0001 else -exit.trailingStep * c.close * 0.0001
                                 if (newSL > pos.sl || pos.sl == 0.0) pos.sl = newSL
                             }
                             if (pos.sl > 0 && curPrice <= pos.sl) { balance += calcPL(pos, curPrice, spread); closed = true }
                         }
                         ExitType.TIME_EXIT -> {
-                            if (i - pos.openBar > exit.rule.exitMinutes) { balance += calcPL(pos, curPrice, spread); closed = true }
+                            if (i - pos.openBar > exit.exitMinutes) { balance += calcPL(pos, curPrice, spread); closed = true }
                         }
                         ExitType.PARTIAL_CLOSE -> {
-                            exit.rule.partialTPs.forEachIndexed { j, tp ->
+                            exit.partialTPs.forEachIndexed { j, tp ->
                                 if (!pos.partialDone.getOrElse(j) { false } && profitPips >= tp.tpPoints) {
                                     val partialLot = pos.lots * tp.closePercent / 100.0
                                     val pl = (if (pos.dir == 1) c.close - pos.openPrice else pos.openPrice - c.close) * partialLot * 100000
                                     balance += pl
                                     pos.lots -= partialLot
-                                    pos.partialDone = BooleanArray(exit.rule.partialTPs.size) { k -> if (k == j) true else pos.partialDone.getOrElse(k) { false } }
+                                    pos.partialDone = BooleanArray(exit.partialTPs.size) { k -> if (k == j) true else pos.partialDone.getOrElse(k) { false } }
                                     if (tp.moveSLToBE) pos.sl = pos.openPrice
                                 }
                             }
