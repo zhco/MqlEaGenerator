@@ -917,3 +917,4 @@ object Mql5Generator {
 
     private fun StringBuilder.appendFooter() { append("//+------------------------------------------------------------------+\n") }
 }
+}
