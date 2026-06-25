@@ -140,7 +140,7 @@ object BacktestEngine {
 
                 // 固定SL/TP
                 for (exit in config.exits) {
-                    when (exit.rule.exitType) {
+                    when (exit.exitType) {
                         ExitType.FIXED_SLTP -> {
                             if (pos.sl > 0 && curPrice <= pos.sl) { balance += calcPL(pos, curPrice, spread); closed = true }
                             if (pos.tp > 0 && curPrice >= pos.tp) { balance += calcPL(pos, curPrice, spread); closed = true }
