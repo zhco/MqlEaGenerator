@@ -57,15 +57,15 @@ fun OptimizeScreen(
         itemsIndexed(params) { i, p ->
             Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(6.dp)) {
                 Column(Modifier.padding(6.dp)) {
-                    OutlinedTextField(p.name, { params = params.toMutableList().also { it[i] = p.copy(name = it) } },
+                    OutlinedTextField(p.name, { v -> params = params.toMutableList().also { it[i] = p.copy(name = v) } },
                         label = { Text("参数名") }, singleLine = true, modifier = Modifier.fillMaxWidth(),
                         textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        OutlinedTextField(p.min, { params = params.toMutableList().also { it[i] = p.copy(min = it) } },
+                        OutlinedTextField(p.min, { v -> params = params.toMutableList().also { it[i] = p.copy(min = v) } },
                             label = { Text("最小") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                        OutlinedTextField(p.max, { params = params.toMutableList().also { it[i] = p.copy(max = it) } },
+                        OutlinedTextField(p.max, { v -> params = params.toMutableList().also { it[i] = p.copy(max = v) } },
                             label = { Text("最大") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                        OutlinedTextField(p.step, { params = params.toMutableList().also { it[i] = p.copy(step = it) } },
+                        OutlinedTextField(p.step, { v -> params = params.toMutableList().also { it[i] = p.copy(step = v) } },
                             label = { Text("步长") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                     }
                 }
@@ -80,15 +80,16 @@ fun OptimizeScreen(
         }
 
         report?.let { rpt ->
+            val best = rpt.best ?: return@let
             item { Divider() }
             item { SectionTitle("═══ 优化结果 ═══") }
             item { Text("总组合: ${rpt.totalRuns}  |  耗时: ${rpt.elapsedMs / 1000.0}s", fontSize = 12.sp) }
-            item { Text("最优参数 (夏普: ${"%.2f".format(rpt.best.sharpe)}):", fontWeight = FontWeight.Bold, fontSize = 13.sp) }
+            item { Text("最优参数 (夏普: ${"%.2f".format(best.sharpe)}):", fontWeight = FontWeight.Bold, fontSize = 13.sp) }
             item {
                 Card(Modifier.fillMaxWidth(), shape = RoundedCornerShape(8.dp), colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)) {
                     Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(3.dp)) {
-                        Text("净收益: \$${rpt.best.netProfit.roundToInt()}  |  胜率: ${"%.1f".format(rpt.best.winRate)}%  |  回撤: ${"%.1f".format(rpt.best.maxDD)}%  |  交易: ${rpt.best.trades}", fontSize = 12.sp)
-                        rpt.best.params.forEach { (k, v) -> Text("  $k = $v", fontSize = 11.sp) }
+                        Text("净收益: \$${best.netProfit.roundToInt()}  |  胜率: ${"%.1f".format(best.winRate)}%  |  回撤: ${"%.1f".format(best.maxDD)}%  |  交易: ${best.trades}", fontSize = 12.sp)
+                        best.params.forEach { (k, v) -> Text("  $k = $v", fontSize = 11.sp) }
                     }
                 }
             }
