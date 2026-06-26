@@ -202,7 +202,6 @@ fun StrategyScreen(
                                 }
                             }
                         }
-                    }
                     // Timeframe
                     var expTF by remember { mutableStateOf(false) }
                     ExposedDropdownMenuBox(expTF, { expTF = it }) {
