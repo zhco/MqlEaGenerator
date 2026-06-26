@@ -205,7 +205,7 @@ data class SignalWeight(
 data class SignalFusion(
     val enabled: Boolean = false,
     val weights: List<SignalWeight> = listOf(
-        SignalWeight(IndicatorType.MA_CROSS, 1.0),
+        SignalWeight(IndicatorType.MA, 1.0),
         SignalWeight(IndicatorType.RSI, 1.0),
     ),
     val buyThreshold: Double = 1.5,
