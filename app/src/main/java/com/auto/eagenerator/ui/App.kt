@@ -34,6 +34,9 @@ val MQL_OPTIONS = listOf("MQL5" to "MQL5", "MQL4" to "MQL4")
 val INDICATOR_OPTIONS = IndicatorType.entries.map { it to it.label }
 val EXIT_OPTIONS = ExitType.entries.map { it to it.label }
 val MM_OPTIONS = MoneyManagement.entries.map { it to it.label }
+val MA_METHODS = listOf("SMA" to "SMA", "EMA" to "EMA", "SMMA" to "SMMA", "LWMA" to "LWMA")
+val APPLIED_PRICES = listOf("Close" to "收盘", "Open" to "开盘", "High" to "最高", "Low" to "最低", "Median" to "中位", "Typical" to "典型", "Weighted" to "加权")
+val CANDLE_PATTERNS = listOf("Engulfing" to "吞没", "Hammer" to "锤子", "ShootingStar" to "射击之星", "Doji" to "十字星", "MorningStar" to "晨星", "EveningStar" to "黄昏之星", "Harami" to "孕线", "Piercing" to "刺透", "DarkCloud" to "乌云盖顶", "ThreeWhite" to "三白兵", "ThreeBlack" to "三乌鸦")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
