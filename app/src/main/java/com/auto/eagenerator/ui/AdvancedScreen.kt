@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -48,7 +49,7 @@ fun AdvancedScreen(
                 var expT by remember { mutableStateOf(false) }
                 Box(Modifier.fillMaxWidth().clickable { expT = true }) {
                     val label = targets.find { it.first == geneticCfg.target }?.second ?: "夏普比率"
-                    OutlinedTextField("优化目标: $label", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, enabled = false, colors = OutlinedTextFieldDefaults.colors().copy(disabledTextColor = MaterialTheme.colorScheme.onSurface, disabledBorderColor = MaterialTheme.colorScheme.outline, disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant))
+                    OutlinedTextField("优化目标: $label", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
                     DropdownMenu(expT, { expT = false }) { targets.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onGenetic(geneticCfg.copy(target = v)); expT = false }) } }
                 }
             }
