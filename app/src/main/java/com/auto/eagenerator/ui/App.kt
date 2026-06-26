@@ -179,46 +179,31 @@ fun StrategyScreen(
                     // Indicator + direction
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         var expInd by remember { mutableStateOf(false) }
-                        val interactionSourceInd = remember { MutableInteractionSource() }
-                        Box(Modifier.weight(1f)) {
-                            OutlinedTextField(e.indicator.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable(interactionSource = interactionSourceInd, indication = null) { expInd = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, interactionSource = interactionSourceInd)
-                            DropdownMenu(expInd, { expInd = false }) { INDICATOR_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(indicator = t) else it }); expInd = false }) } }
-                        }
+                        OutlinedTextField(e.indicator.label, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(1f).clickable { expInd = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                        DropdownMenu(expInd, { expInd = false }) { INDICATOR_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(indicator = t) else it }); expInd = false }) } }
                         var expDir by remember { mutableStateOf(false) }
-                        val interactionSourceDir = remember { MutableInteractionSource() }
                         val dText = DIR_OPTIONS.find { it.first == e.direction }?.second ?: "双向"
-                        Box(Modifier.weight(0.7f)) {
-                            OutlinedTextField(dText, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable(interactionSource = interactionSourceDir, indication = null) { expDir = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, interactionSource = interactionSourceDir)
-                            DropdownMenu(expDir, { expDir = false }) { DIR_OPTIONS.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(direction = v) else it }); expDir = false }) } }
-                        }
+                        OutlinedTextField(dText, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(0.7f).clickable { expDir = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                        DropdownMenu(expDir, { expDir = false }) { DIR_OPTIONS.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(direction = v) else it }); expDir = false }) } }
                         // Logic op
                         if (i > 0) {
                             var expL by remember { mutableStateOf(false) }
-                            val interactionSourceL = remember { MutableInteractionSource() }
-                            Box(Modifier.weight(0.4f)) {
-                                OutlinedTextField(if (e.logicOp == LogicOp.AND) "AND" else "OR", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable(interactionSource = interactionSourceL, indication = null) { expL = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, interactionSource = interactionSourceL)
-                                DropdownMenu(expL, { expL = false }) {
-                                    DropdownMenuItem(text = { Text("AND") }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(logicOp = LogicOp.AND) else it }); expL = false })
-                                    DropdownMenuItem(text = { Text("OR") }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(logicOp = LogicOp.OR) else it }); expL = false })
-                                }
+                            OutlinedTextField(if (e.logicOp == LogicOp.AND) "AND" else "OR", {}, readOnly = true, singleLine = true, modifier = Modifier.weight(0.4f).clickable { expL = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                            DropdownMenu(expL, { expL = false }) {
+                                DropdownMenuItem(text = { Text("AND") }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(logicOp = LogicOp.AND) else it }); expL = false })
+                                DropdownMenuItem(text = { Text("OR") }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(logicOp = LogicOp.OR) else it }); expL = false })
                             }
                         }
                     }
                     // Timeframe
                     var expTF by remember { mutableStateOf(false) }
-                    val interactionSourceTF = remember { MutableInteractionSource() }
                     val tfText = TF_OPTIONS.find { it.first == e.timeframe }?.second ?: "当前"
-                    Box(Modifier.fillMaxWidth()) {
-                        OutlinedTextField("时框: $tfText", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable(interactionSource = interactionSourceTF, indication = null) { expTF = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, interactionSource = interactionSourceTF)
-                        DropdownMenu(expTF, { expTF = false }) { TF_OPTIONS.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(timeframe = v) else it }); expTF = false }) } }
-                    }
+                    OutlinedTextField("时框: $tfText", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable { expTF = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                    DropdownMenu(expTF, { expTF = false }) { TF_OPTIONS.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(timeframe = v) else it }); expTF = false }) } }
                     // Entry order type
                     var expOrd by remember { mutableStateOf(false) }
-                    val interactionSourceOrd = remember { MutableInteractionSource() }
-                    Box(Modifier.fillMaxWidth()) {
-                        OutlinedTextField("入场方式: ${e.entryType.label}", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable(interactionSource = interactionSourceOrd, indication = null) { expOrd = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, interactionSource = interactionSourceOrd)
-                        DropdownMenu(expOrd, { expOrd = false }) { ORDER_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(entryType = t) else it }); expOrd = false }) } }
-                    }
+                    OutlinedTextField("入场方式: ${e.entryType.label}", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable { expOrd = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                    DropdownMenu(expOrd, { expOrd = false }) { ORDER_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(entryType = t) else it }); expOrd = false }) } }
                     if (e.entryType == EntryOrderType.LIMIT) {
                         OutlinedTextField(e.limitOffset.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(limitOffset = v.toIntOrNull() ?: 50) else it }) }, label = { Text("限价偏移(点)") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                     }
@@ -297,11 +282,8 @@ fun StrategyScreen(
                 Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Row(Modifier.fillMaxWidth()) { Text("${i + 1}.", fontWeight = FontWeight.Bold, fontSize = 14.sp); Spacer(Modifier.weight(1f)); if (i > 0) TextButton({ onExits(exits.filter { it.id != ex.id }) }) { Text("✕", color = MaterialTheme.colorScheme.error) } }
                     var expExit by remember { mutableStateOf(false) }
-                    val interactionSourceExit = remember { MutableInteractionSource() }
-                    Box(Modifier.fillMaxWidth()) {
-                        OutlinedTextField(ex.exitType.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable(interactionSource = interactionSourceExit, indication = null) { expExit = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, interactionSource = interactionSourceExit)
-                        DropdownMenu(expExit, { expExit = false }) { EXIT_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onExits(exits.map { if (it.id == ex.id) it.copy(exitType = t) else it }); expExit = false }) } }
-                    }
+                    OutlinedTextField(ex.exitType.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable { expExit = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                    DropdownMenu(expExit, { expExit = false }) { EXIT_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onExits(exits.map { if (it.id == ex.id) it.copy(exitType = t) else it }); expExit = false }) } }
                     when (ex.exitType) {
                         ExitType.FIXED_SLTP -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             OutlinedTextField(ex.slPoints.toString(), { v -> onExits(exits.map { if (it.id == ex.id) it.copy(slPoints = v.toIntOrNull() ?: 300) else it }) }, label = { Text("SL(点)") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
@@ -343,11 +325,8 @@ fun StrategyScreen(
         item { SectionTitle("═══ 资金管理 ═══") }
         item {
             var expMM by remember { mutableStateOf(false) }
-            val interactionSourceMM = remember { MutableInteractionSource() }
-            Box(Modifier.fillMaxWidth()) {
-                OutlinedTextField(money.mmType.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable(interactionSource = interactionSourceMM, indication = null) { expMM = true }, textStyle = LocalTextStyle.current.copy(fontSize = 13.sp), trailingIcon = { Text("▾") }, interactionSource = interactionSourceMM)
-                DropdownMenu(expMM, { expMM = false }) { MM_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onMoney(money.copy(mmType = t)); expMM = false }) } }
-            }
+            OutlinedTextField(money.mmType.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable { expMM = true }, textStyle = LocalTextStyle.current.copy(fontSize = 13.sp), trailingIcon = { Text("▾") })
+            DropdownMenu(expMM, { expMM = false }) { MM_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onMoney(money.copy(mmType = t)); expMM = false }) } }
         }
         item {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -444,10 +423,8 @@ fun StrategyScreen(
                 item {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         var expW by remember { mutableStateOf(false) }
-                        val interactionSourceW = remember { MutableInteractionSource() }
-                        Box(Modifier.weight(1.2f)) {
-                            OutlinedTextField(w.indicator.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable(interactionSource = interactionSourceW, indication = null) { expW = true }, textStyle = LocalTextStyle.current.copy(fontSize = 11.sp), trailingIcon = { Text("▾") }, interactionSource = interactionSourceW)
-                            DropdownMenu(expW, { expW = false }) { INDICATOR_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { val nl = signalFusion.weights.toMutableList(); nl[j] = w.copy(indicator = t); onFusion(signalFusion.copy(weights = nl)); expW = false }) } }
+                        OutlinedTextField(w.indicator.label, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(1.2f).clickable { expW = true }, textStyle = LocalTextStyle.current.copy(fontSize = 11.sp), trailingIcon = { Text("▾") })
+                        DropdownMenu(expW, { expW = false }) { INDICATOR_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { val nl = signalFusion.weights.toMutableList(); nl[j] = w.copy(indicator = t); onFusion(signalFusion.copy(weights = nl)); expW = false }) } }
                         }
                         OutlinedTextField(w.weight.toString(), { val nl = signalFusion.weights.toMutableList(); nl[j] = w.copy(weight = it.toDoubleOrNull() ?: 1.0); onFusion(signalFusion.copy(weights = nl)) }, label = { Text("权重") }, singleLine = true, modifier = Modifier.weight(0.8f), textStyle = LocalTextStyle.current.copy(fontSize = 11.sp))
                         OutlinedTextField(w.minStrength.toString(), { val nl = signalFusion.weights.toMutableList(); nl[j] = w.copy(minStrength = it.toDoubleOrNull() ?: 0.0); onFusion(signalFusion.copy(weights = nl)) }, label = { Text("最小强度") }, singleLine = true, modifier = Modifier.weight(0.8f), textStyle = LocalTextStyle.current.copy(fontSize = 11.sp))
