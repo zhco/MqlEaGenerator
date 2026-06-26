@@ -1,26 +1,38 @@
 package com.auto.eagenerator.model
 
-enum class IndicatorType(val label: String, val desc: String) {
-    MA_CROSS("均线交叉", "金叉/死叉"),
-    MA_TREND("均线排列", "多空排列"),
-    MA_PRICE("价格均线", "价格穿越"),
-    RSI("RSI", "超买超卖"),
-    RSI_DIVERGENCE("RSI背离", "顶底背离"),
-    STOCH("Stochastic", "K/D交叉"),
-    MACD("MACD", "金叉死叉"),
-    MACD_DIVERGENCE("MACD背离", "顶底背离"),
-    BOLLINGER("布林带", "上下轨"),
-    ADX("ADX", "趋势强度"),
-    SAR("Parabolic SAR", "反转点"),
-    CCI("CCI", "超买超卖"),
-    ICHIMOKU("一目均衡", "云层"),
-    ALLIGATOR("鳄鱼线", "发散收敛"),
-    ATR("ATR", "波动突破"),
-    CANDLE_PATTERN("K线形态", "吞没/锤子"),
-    PRICE_BREAK("价格突破", "前高前低"),
-    VOLUME("成交量", "放量缩量"),
-    CUSTOM_EXPRESSION("自定义表达式", "自由MQL条件"),
-    ICUSTOM("自定义指标", "iCustom外部指标"),
+enum class IndicatorType(val label: String) {
+    MA("MA均线"),
+    RSI("RSI"),
+    STOCH("Stochastic"),
+    MACD("MACD"),
+    BOLLINGER("布林带"),
+    ADX("ADX"),
+    SAR("Parabolic SAR"),
+    CCI("CCI"),
+    ICHIMOKU("一目均衡"),
+    ALLIGATOR("鳄鱼线"),
+    ATR("ATR"),
+    CANDLE_PATTERN("K线形态"),
+    VOLUME("成交量"),
+    PRICE("K线价格"),
+    CUSTOM_EXPRESSION("自定义表达式"),
+    ICUSTOM("自定义指标"),
+}
+
+enum class ComparisonOp(val symbol: String, val label: String, val isCross: Boolean = false) {
+    GT(">", "大于"),
+    LT("<", "小于"),
+    GTE(">=", "大于等于"),
+    LTE("<=", "小于等于"),
+    EQ("==", "等于"),
+    CROSS_ABOVE("crosses_above", "上穿", true),
+    CROSS_BELOW("crosses_below", "下穿", true),
+}
+
+enum class TargetType(val label: String) {
+    FIXED("固定值"),
+    PRICE("K线价格"),
+    INDICATOR("另一指标"),
 }
 
 enum class ExitType(val label: String) {
