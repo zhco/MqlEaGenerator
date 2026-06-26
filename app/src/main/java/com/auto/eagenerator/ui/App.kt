@@ -231,6 +231,19 @@ fun StrategyScreen(
                                 OutlinedTextField(e.slowPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(slowPeriod = v.toIntOrNull() ?: 20) else it }) }, label = { Text("慢均线") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                                 if (e.indicator == IndicatorType.MA_TREND) OutlinedTextField(e.midPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(midPeriod = v.toIntOrNull() ?: 50) else it }) }, label = { Text("中均线") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                             }
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                var expMA by remember { mutableStateOf(false) }
+                                ExposedDropdownMenuBox(expMA, { expMA = it }) {
+                                    OutlinedTextField(e.maMethod, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(1f).menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expMA) })
+                                    ExposedDropdownMenu(expMA, { expMA = false }) { MA_METHODS.forEach { (v,l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(maMethod = v) else it }); expMA = false }) } }
+                                }
+                                var expPR by remember { mutableStateOf(false) }
+                                ExposedDropdownMenuBox(expPR, { expPR = it }) {
+                                    val prLabel = APPLIED_PRICES.find { it.first == e.appliedPrice }?.second ?: "收盘"
+                                    OutlinedTextField(prLabel, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(1f).menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expPR) })
+                                    ExposedDropdownMenu(expPR, { expPR = false }) { APPLIED_PRICES.forEach { (v,l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(appliedPrice = v) else it }); expPR = false }) } }
+                                }
+                            }
                         }
                         IndicatorType.RSI, IndicatorType.RSI_DIVERGENCE -> {
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
