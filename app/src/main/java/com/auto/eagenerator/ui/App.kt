@@ -179,31 +179,41 @@ fun StrategyScreen(
                     // Indicator + direction
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         var expInd by remember { mutableStateOf(false) }
-                        OutlinedTextField(e.indicator.label, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(1f).clickable { expInd = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
-                        DropdownMenu(expInd, { expInd = false }) { INDICATOR_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(indicator = t) else it }); expInd = false }) } }
+                        ExposedDropdownMenuBox(expInd, { expInd = it }) {
+                            OutlinedTextField(e.indicator.label, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(1f).menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expInd) })
+                            ExposedDropdownMenu(expInd, { expInd = false }) { INDICATOR_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(indicator = t) else it }); expInd = false }) } }
+                        }
                         var expDir by remember { mutableStateOf(false) }
-                        val dText = DIR_OPTIONS.find { it.first == e.direction }?.second ?: "双向"
-                        OutlinedTextField(dText, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(0.7f).clickable { expDir = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
-                        DropdownMenu(expDir, { expDir = false }) { DIR_OPTIONS.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(direction = v) else it }); expDir = false }) } }
+                        ExposedDropdownMenuBox(expDir, { expDir = it }) {
+                            val dText = DIR_OPTIONS.find { it.first == e.direction }?.second ?: "双向"
+                            OutlinedTextField(dText, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(0.7f).menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expDir) })
+                            ExposedDropdownMenu(expDir, { expDir = false }) { DIR_OPTIONS.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(direction = v) else it }); expDir = false }) } }
+                        }
                         // Logic op
                         if (i > 0) {
                             var expL by remember { mutableStateOf(false) }
-                            OutlinedTextField(if (e.logicOp == LogicOp.AND) "AND" else "OR", {}, readOnly = true, singleLine = true, modifier = Modifier.weight(0.4f).clickable { expL = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
-                            DropdownMenu(expL, { expL = false }) {
-                                DropdownMenuItem(text = { Text("AND") }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(logicOp = LogicOp.AND) else it }); expL = false })
-                                DropdownMenuItem(text = { Text("OR") }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(logicOp = LogicOp.OR) else it }); expL = false })
+                            ExposedDropdownMenuBox(expL, { expL = it }) {
+                                OutlinedTextField(if (e.logicOp == LogicOp.AND) "AND" else "OR", {}, readOnly = true, singleLine = true, modifier = Modifier.weight(0.4f).menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expL) })
+                                ExposedDropdownMenu(expL, { expL = false }) {
+                                    DropdownMenuItem(text = { Text("AND") }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(logicOp = LogicOp.AND) else it }); expL = false })
+                                    DropdownMenuItem(text = { Text("OR") }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(logicOp = LogicOp.OR) else it }); expL = false })
+                                }
                             }
                         }
                     }
                     // Timeframe
                     var expTF by remember { mutableStateOf(false) }
-                    val tfText = TF_OPTIONS.find { it.first == e.timeframe }?.second ?: "当前"
-                    OutlinedTextField("时框: $tfText", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable { expTF = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
-                    DropdownMenu(expTF, { expTF = false }) { TF_OPTIONS.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(timeframe = v) else it }); expTF = false }) } }
+                    ExposedDropdownMenuBox(expTF, { expTF = it }) {
+                        val tfText = TF_OPTIONS.find { it.first == e.timeframe }?.second ?: "当前"
+                        OutlinedTextField("时框: $tfText", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expTF) })
+                        ExposedDropdownMenu(expTF, { expTF = false }) { TF_OPTIONS.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(timeframe = v) else it }); expTF = false }) } }
+                    }
                     // Entry order type
                     var expOrd by remember { mutableStateOf(false) }
-                    OutlinedTextField("入场方式: ${e.entryType.label}", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable { expOrd = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
-                    DropdownMenu(expOrd, { expOrd = false }) { ORDER_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(entryType = t) else it }); expOrd = false }) } }
+                    ExposedDropdownMenuBox(expOrd, { expOrd = it }) {
+                        OutlinedTextField("入场方式: ${e.entryType.label}", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expOrd) })
+                        ExposedDropdownMenu(expOrd, { expOrd = false }) { ORDER_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(entryType = t) else it }); expOrd = false }) } }
+                    }
                     if (e.entryType == EntryOrderType.LIMIT) {
                         OutlinedTextField(e.limitOffset.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(limitOffset = v.toIntOrNull() ?: 50) else it }) }, label = { Text("限价偏移(点)") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                     }
@@ -282,8 +292,10 @@ fun StrategyScreen(
                 Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Row(Modifier.fillMaxWidth()) { Text("${i + 1}.", fontWeight = FontWeight.Bold, fontSize = 14.sp); Spacer(Modifier.weight(1f)); if (i > 0) TextButton({ onExits(exits.filter { it.id != ex.id }) }) { Text("✕", color = MaterialTheme.colorScheme.error) } }
                     var expExit by remember { mutableStateOf(false) }
-                    OutlinedTextField(ex.exitType.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable { expExit = true }, textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
-                    DropdownMenu(expExit, { expExit = false }) { EXIT_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onExits(exits.map { if (it.id == ex.id) it.copy(exitType = t) else it }); expExit = false }) } }
+                    ExposedDropdownMenuBox(expExit, { expExit = it }) {
+                        OutlinedTextField(ex.exitType.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expExit) })
+                        ExposedDropdownMenu(expExit, { expExit = false }) { EXIT_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onExits(exits.map { if (it.id == ex.id) it.copy(exitType = t) else it }); expExit = false }) } }
+                    }
                     when (ex.exitType) {
                         ExitType.FIXED_SLTP -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             OutlinedTextField(ex.slPoints.toString(), { v -> onExits(exits.map { if (it.id == ex.id) it.copy(slPoints = v.toIntOrNull() ?: 300) else it }) }, label = { Text("SL(点)") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
@@ -325,8 +337,10 @@ fun StrategyScreen(
         item { SectionTitle("═══ 资金管理 ═══") }
         item {
             var expMM by remember { mutableStateOf(false) }
-            OutlinedTextField(money.mmType.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().clickable { expMM = true }, textStyle = LocalTextStyle.current.copy(fontSize = 13.sp), trailingIcon = { Text("▾") })
-            DropdownMenu(expMM, { expMM = false }) { MM_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onMoney(money.copy(mmType = t)); expMM = false }) } }
+            ExposedDropdownMenuBox(expMM, { expMM = it }) {
+                OutlinedTextField(money.mmType.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 13.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expMM) })
+                ExposedDropdownMenu(expMM, { expMM = false }) { MM_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onMoney(money.copy(mmType = t)); expMM = false }) } }
+            }
         }
         item {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
