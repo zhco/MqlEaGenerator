@@ -192,8 +192,7 @@ fun StrategyScreen(
                             OutlinedTextField(dText, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(0.7f).menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expDir) })
                             ExposedDropdownMenu(expDir, { expDir = false }) { DIR_OPTIONS.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(direction = v) else it }); expDir = false }) } }
                         }
-                        // Logic op
-                        if (i > 0) {
+                        // Logic op (all conditions show AND/OR for consistency)
                             var expL by remember { mutableStateOf(false) }
                             ExposedDropdownMenuBox(expL, { expL = it }) {
                                 OutlinedTextField(if (e.logicOp == LogicOp.AND) "AND" else "OR", {}, readOnly = true, singleLine = true, modifier = Modifier.weight(0.4f).menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expL) })
