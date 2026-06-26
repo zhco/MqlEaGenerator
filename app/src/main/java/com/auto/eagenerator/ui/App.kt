@@ -221,13 +221,12 @@ fun StrategyScreen(
                     if (e.entryType == EntryOrderType.STOP) {
                         OutlinedTextField(e.stopOffset.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(stopOffset = v.toIntOrNull() ?: 50) else it }) }, label = { Text("突破偏移(点)") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                     }
-                    // Indicator-specific params
+                    // === 信号源指标参数 ===
                     when (e.indicator) {
-                        IndicatorType.MA_CROSS, IndicatorType.MA_TREND, IndicatorType.MA_PRICE -> {
+                        IndicatorType.MA -> {
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                 OutlinedTextField(e.fastPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(fastPeriod = v.toIntOrNull() ?: 5) else it }) }, label = { Text("快均线") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                                 OutlinedTextField(e.slowPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(slowPeriod = v.toIntOrNull() ?: 20) else it }) }, label = { Text("慢均线") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                                if (e.indicator == IndicatorType.MA_TREND) OutlinedTextField(e.midPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(midPeriod = v.toIntOrNull() ?: 50) else it }) }, label = { Text("中均线") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                             }
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                                 var expMA by remember { mutableStateOf(false) }
@@ -237,57 +236,32 @@ fun StrategyScreen(
                                 }
                                 var expPR by remember { mutableStateOf(false) }
                                 ExposedDropdownMenuBox(expPR, { expPR = it }) {
-                                    val prLabel = APPLIED_PRICES.find { it.first == e.appliedPrice }?.second ?: "收盘"
+                                    val prLabel = APPLIED_PRICES.find { it.first == e.appliedPrice }?.second ?: "收盘价"
                                     OutlinedTextField(prLabel, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(1f).menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expPR) })
                                     ExposedDropdownMenu(expPR, { expPR = false }) { APPLIED_PRICES.forEach { (v,l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(appliedPrice = v) else it }); expPR = false }) } }
                                 }
                             }
                         }
-                        IndicatorType.RSI, IndicatorType.RSI_DIVERGENCE -> {
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                OutlinedTextField(e.period.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(period = v.toIntOrNull() ?: 14) else it }) }, label = { Text("周期") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                                if (e.indicator == IndicatorType.RSI) { OutlinedTextField(e.obLevel.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(obLevel = v.toDoubleOrNull() ?: 70.0) else it }) }, label = { Text("超买") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp)); OutlinedTextField(e.osLevel.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(osLevel = v.toDoubleOrNull() ?: 30.0) else it }) }, label = { Text("超卖") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp)) }
-                                else OutlinedTextField(e.divLookback.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(divLookback = v.toIntOrNull() ?: 20) else it }) }, label = { Text("回溯K线") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                            }
+                        IndicatorType.RSI -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            OutlinedTextField(e.period.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(period = v.toIntOrNull() ?: 14) else it }) }, label = { Text("周期") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                         }
-                        IndicatorType.ICUSTOM -> {
-                            OutlinedTextField(e.customIndiName, { v -> onEntries(entries.map { if (it.id == e.id) it.copy(customIndiName = v) else it }) }, label = { Text("指标名称") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                            OutlinedTextField(e.customIndiParams, { v -> onEntries(entries.map { if (it.id == e.id) it.copy(customIndiParams = v) else it }) }, label = { Text("参数(逗号分隔)") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                OutlinedTextField(e.customIndiBuffer.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(customIndiBuffer = v.toIntOrNull() ?: 0) else it }) }, label = { Text("Buffer") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                                OutlinedTextField(e.customIndiSignal.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(customIndiSignal = v.toDoubleOrNull() ?: 0.0) else it }) }, label = { Text("信号阈值") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                            }
+                        IndicatorType.STOCH -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            OutlinedTextField(e.kPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(kPeriod = v.toIntOrNull() ?: 5) else it }) }, label = { Text("K") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            OutlinedTextField(e.dPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(dPeriod = v.toIntOrNull() ?: 3) else it }) }, label = { Text("D") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            OutlinedTextField(e.slowing.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(slowing = v.toIntOrNull() ?: 3) else it }) }, label = { Text("Sl") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                         }
-                        IndicatorType.CUSTOM_EXPRESSION -> {
-                            OutlinedTextField(e.customExpression, { v -> onEntries(entries.map { if (it.id == e.id) it.copy(customExpression = v) else it }) }, label = { Text("MQL条件表达式") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                        }
-                        IndicatorType.MACD, IndicatorType.MACD_DIVERGENCE -> {
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                                OutlinedTextField(e.fastPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(fastPeriod = v.toIntOrNull() ?: 12) else it }) }, label = { Text("快") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                                OutlinedTextField(e.slowPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(slowPeriod = v.toIntOrNull() ?: 26) else it }) }, label = { Text("慢") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                                OutlinedTextField(e.period.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(period = v.toIntOrNull() ?: 9) else it }) }, label = { Text("信号") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                            }
-                            if (e.indicator == IndicatorType.MACD_DIVERGENCE) OutlinedTextField(e.divLookback.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(divLookback = v.toIntOrNull() ?: 20) else it }) }, label = { Text("背离回溯K线") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                        IndicatorType.MACD -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            OutlinedTextField(e.fastPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(fastPeriod = v.toIntOrNull() ?: 12) else it }) }, label = { Text("快") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            OutlinedTextField(e.slowPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(slowPeriod = v.toIntOrNull() ?: 26) else it }) }, label = { Text("慢") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            OutlinedTextField(e.period.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(period = v.toIntOrNull() ?: 9) else it }) }, label = { Text("信号") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                         }
                         IndicatorType.BOLLINGER -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             OutlinedTextField(e.bbPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(bbPeriod = v.toIntOrNull() ?: 20) else it }) }, label = { Text("周期") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                             OutlinedTextField(e.bbDeviation.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(bbDeviation = v.toDoubleOrNull() ?: 2.0) else it }) }, label = { Text("偏差") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                         }
-                        IndicatorType.ATR -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            OutlinedTextField(e.atrPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(atrPeriod = v.toIntOrNull() ?: 14) else it }) }, label = { Text("周期") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                            OutlinedTextField(e.atrMultiplier.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(atrMultiplier = v.toDoubleOrNull() ?: 1.5) else it }) }, label = { Text("倍数") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                        }
                         IndicatorType.ADX -> OutlinedTextField(e.adxLevel.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(adxLevel = v.toDoubleOrNull() ?: 25.0) else it }) }, label = { Text("ADX阈值") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                         IndicatorType.CCI -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             OutlinedTextField(e.period.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(period = v.toIntOrNull() ?: 14) else it }) }, label = { Text("周期") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                            OutlinedTextField(e.obLevel.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(obLevel = v.toDoubleOrNull() ?: 100.0) else it }) }, label = { Text("超买") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                            OutlinedTextField(e.osLevel.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(osLevel = v.toDoubleOrNull() ?: 100.0) else it }) }, label = { Text("超卖") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                        }
-                        IndicatorType.PRICE_BREAK -> OutlinedTextField(e.lookbackBars.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(lookbackBars = v.toIntOrNull() ?: 20) else it }) }, label = { Text("回溯K线数") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                        IndicatorType.STOCH -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            OutlinedTextField(e.kPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(kPeriod = v.toIntOrNull() ?: 5) else it }) }, label = { Text("K") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                            OutlinedTextField(e.dPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(dPeriod = v.toIntOrNull() ?: 3) else it }) }, label = { Text("D") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
-                            OutlinedTextField(e.slowing.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(slowing = v.toIntOrNull() ?: 3) else it }) }, label = { Text("Sl") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                         }
                         IndicatorType.SAR -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                             OutlinedTextField(e.sarStep.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(sarStep = v.toDoubleOrNull() ?: 0.02) else it }) }, label = { Text("步长") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
@@ -303,6 +277,9 @@ fun StrategyScreen(
                             OutlinedTextField(e.teethPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(teethPeriod = v.toIntOrNull() ?: 8) else it }) }, label = { Text("牙齿") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                             OutlinedTextField(e.lipsPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(lipsPeriod = v.toIntOrNull() ?: 5) else it }) }, label = { Text("嘴唇") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                         }
+                        IndicatorType.ATR -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            OutlinedTextField(e.atrPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(atrPeriod = v.toIntOrNull() ?: 14) else it }) }, label = { Text("周期") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                        }
                         IndicatorType.CANDLE_PATTERN -> {
                             var expCP by remember { mutableStateOf(false) }
                             ExposedDropdownMenuBox(expCP, { expCP = it }) {
@@ -315,7 +292,77 @@ fun StrategyScreen(
                             OutlinedTextField(e.volumeThreshold.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(volumeThreshold = v.toDoubleOrNull() ?: 1.5) else it }) }, label = { Text("放量倍数") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                             OutlinedTextField(e.lookbackBars.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(lookbackBars = v.toIntOrNull() ?: 20) else it }) }, label = { Text("回溯K线") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                         }
-                        else -> {}
+                        IndicatorType.ICUSTOM -> {
+                            OutlinedTextField(e.customIndiName, { v -> onEntries(entries.map { if (it.id == e.id) it.copy(customIndiName = v) else it }) }, label = { Text("指标名称") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            OutlinedTextField(e.customIndiParams, { v -> onEntries(entries.map { if (it.id == e.id) it.copy(customIndiParams = v) else it }) }, label = { Text("参数(逗号分隔)") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            OutlinedTextField(e.customIndiBuffer.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(customIndiBuffer = v.toIntOrNull() ?: 0) else it }) }, label = { Text("Buffer") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                        }
+                        IndicatorType.CUSTOM_EXPRESSION -> {
+                            OutlinedTextField(e.customExpression, { v -> onEntries(entries.map { if (it.id == e.id) it.copy(customExpression = v) else it }) }, label = { Text("MQL条件表达式") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                        }
+                        IndicatorType.PRICE -> {}
+                    }
+
+                    // === 信号源缓冲区(多线指标选择) ===
+                    if (e.indicator in listOf(IndicatorType.MA, IndicatorType.MACD, IndicatorType.BOLLINGER, IndicatorType.STOCH, IndicatorType.ICHIMOKU, IndicatorType.ALLIGATOR)) {
+                        var expBuf by remember { mutableStateOf(false) }
+                        val bufOpts = when (e.indicator) {
+                            IndicatorType.MA -> BUFFER_OPTIONS_MA
+                            IndicatorType.MACD -> BUFFER_OPTIONS_MACD
+                            IndicatorType.BOLLINGER -> BUFFER_OPTIONS_BB
+                            IndicatorType.STOCH -> BUFFER_OPTIONS_STOCH
+                            IndicatorType.ICHIMOKU -> BUFFER_OPTIONS_ICHI
+                            IndicatorType.ALLIGATOR -> BUFFER_OPTIONS_ALLI
+                            else -> BUFFER_OPTIONS_SINGLE
+                        }
+                        val bufLabel = bufOpts.find { it.first == e.srcBuffer }?.second ?: "当前值(0)"
+                        ExposedDropdownMenuBox(expBuf, { expBuf = it }) {
+                            OutlinedTextField("取值线: $bufLabel", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expBuf) })
+                            ExposedDropdownMenu(expBuf, { expBuf = false }) { bufOpts.forEach { (v,l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(srcBuffer = v) else it }); expBuf = false }) } }
+                        }
+                    }
+
+                    // === 比较方式(Comparison) ===
+                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                        var expCmp by remember { mutableStateOf(false) }
+                        ExposedDropdownMenuBox(expCmp, { expCmp = it }) {
+                            OutlinedTextField(e.comparison.label, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(1f).menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expCmp) })
+                            ExposedDropdownMenu(expCmp, { expCmp = false }) { COMPARISON_OPTIONS.forEach { (t,l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(comparison = t) else it }); expCmp = false }) } }
+                        }
+                        // 快捷方向提示
+                        Text(if (e.comparison.isCross) "线上穿到下" else if (e.comparison in listOf(ComparisonOp.GT, ComparisonOp.GTE)) "A≥B时触发" else "A≤B时触发", fontSize = 11.sp, color = MaterialTheme.colorScheme.onSurfaceVariant, modifier = Modifier.align(Alignment.CenterVertically))
+                    }
+
+                    // === 比较目标(Target) ===
+                    var expTT by remember { mutableStateOf(false) }
+                    ExposedDropdownMenuBox(expTT, { expTT = it }) {
+                        OutlinedTextField("比: ${e.targetType.label}", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expTT) })
+                        ExposedDropdownMenu(expTT, { expTT = false }) { TARGET_TYPE_OPTIONS.forEach { (t,l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(targetType = t) else it }); expTT = false }) } }
+                    }
+                    when (e.targetType) {
+                        TargetType.FIXED -> OutlinedTextField(e.targetFixed.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(targetFixed = v.toDoubleOrNull() ?: 0.0) else it }) }, label = { Text("固定数值") }, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                        TargetType.PRICE -> {
+                            var expTP by remember { mutableStateOf(false) }
+                            ExposedDropdownMenuBox(expTP, { expTP = it }) {
+                                val tpLabel = PRICE_OPTIONS.find { it.first == e.targetPrice }?.second ?: "收盘价"
+                                OutlinedTextField("K线: $tpLabel", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expTP) })
+                                ExposedDropdownMenu(expTP, { expTP = false }) { PRICE_OPTIONS.forEach { (v,l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(targetPrice = v) else it }); expTP = false }) } }
+                            }
+                        }
+                        TargetType.INDICATOR -> {
+                            var expTI by remember { mutableStateOf(false) }
+                            ExposedDropdownMenuBox(expTI, { expTI = it }) {
+                                OutlinedTextField(e.targetIndicator.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expTI) })
+                                ExposedDropdownMenu(expTI, { expTI = false }) { INDICATOR_OPTIONS.forEach { (t,l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(targetIndicator = t) else it }); expTI = false }) } }
+                            }
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                var expTB by remember { mutableStateOf(false) }
+                                ExposedDropdownMenuBox(expTB, { expTB = it }) {
+                                    OutlinedTextField("Buffer: ${e.targetBuffer}", {}, readOnly = true, singleLine = true, modifier = Modifier.weight(1f).menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expTB) })
+                                    ExposedDropdownMenu(expTB, { expTB = false }) { (0..4).forEach { v -> DropdownMenuItem(text = { Text("Buffer $v") }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(targetBuffer = v) else it }); expTB = false }) } }
+                                }
+                            }
+                        }
                     }
                 }
             }
