@@ -64,12 +64,20 @@ enum class NewsImportance(val label: String) { LOW("低"), MEDIUM("中"), HIGH("
 data class PartialTP(val tpPoints: Int = 300, val closePercent: Double = 50.0, val moveSLToBE: Boolean = true)
 
 data class EntryCondition(
-    val id: Int = 0, val indicator: IndicatorType = IndicatorType.MA_CROSS,
+    val id: Int = 0,
+    val indicator: IndicatorType = IndicatorType.MA,
+    val comparison: ComparisonOp = ComparisonOp.CROSS_ABOVE,
+    val srcBuffer: Int = 0,         // 信号源缓冲区 (0=主线/当前值)
+    val targetType: TargetType = TargetType.FIXED,
+    val targetPrice: String = "Close",  // 目标K线价格(Close/Open/High/Low)
+    val targetIndicator: IndicatorType = IndicatorType.MA,  // 目标指标
+    val targetBuffer: Int = 0,      // 目标指标缓冲区
+    val targetFixed: Double = 0.0,  // 目标固定值
     val logicOp: LogicOp = LogicOp.AND,
     val timeframe: String = "CURRENT",
     val entryType: EntryOrderType = EntryOrderType.MARKET,
     val limitOffset: Int = 50, val stopOffset: Int = 50,
-    val fastPeriod: Int = 5, val slowPeriod: Int = 20, val midPeriod: Int = 50,
+    val fastPeriod: Int = 5, val slowPeriod: Int = 20,
     val maMethod: String = "SMA", val appliedPrice: String = "Close",
     val obLevel: Double = 70.0, val osLevel: Double = 30.0, val period: Int = 14,
     val kPeriod: Int = 5, val dPeriod: Int = 3, val slowing: Int = 3,
@@ -82,12 +90,10 @@ data class EntryCondition(
     val lookbackBars: Int = 20,
     val candlePattern: String = "Engulfing",
     val volumeThreshold: Double = 1.5,
-    val divLookback: Int = 20, val divMinStrength: Int = 3,
     val customExpression: String = "",
     val customIndiName: String = "", val customIndiParams: String = "",
     val customIndiBuffer: Int = 0, val customIndiSignal: Double = 0.0,
     val direction: String = "Both",
-    // v6: 多TF确认
     val multiTF: MultiTFConfig = MultiTFConfig(),
 )
 
