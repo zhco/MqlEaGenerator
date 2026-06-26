@@ -10,7 +10,7 @@ object SignalFusionEngine {
     fun evaluate(config: StrategyConfig, signals: Map<IndicatorType, Double>): FusionResult {
         val fusion = config.signalFusion
         if (!fusion.enabled) {
-            return FusionResult(score = 0.0, signals = signals, action = "skip")
+            return FusionResult(score = 0.0, signals = signals.mapKeys { it.key.label }, action = "skip")
         }
 
         var totalScore = 0.0
@@ -48,3 +48,4 @@ object SignalFusionEngine {
         val signals: Map<String, Double> = emptyMap(),
     )
 }
+

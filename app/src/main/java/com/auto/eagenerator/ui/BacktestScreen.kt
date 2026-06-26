@@ -396,8 +396,8 @@ fun BacktestScreen(
             if (rpt.trades.isNotEmpty()) {
                 item { Spacer(Modifier.height(4.dp)); Text("最近交易:", fontWeight = FontWeight.Bold, fontSize = 13.sp) }
                 for (t in rpt.trades.takeLast(10).reversed()) {
-                    val color = if (t.profit >= 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                     item {
+                        val color = if (t.profit >= 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
                         Row(Modifier.fillMaxWidth()) {
                             Text("${t.entryTime}  ${if (t.dir == 1) "BUY" else "SELL"}  ${"%.5f".format(t.entryPrice)}→${"%.5f".format(t.exitPrice)}", fontSize = 10.sp, fontFamily = FontFamily.Monospace, modifier = Modifier.weight(1f))
                             Text("\$${t.profit.roundToInt()}", color = color, fontSize = 10.sp, fontFamily = FontFamily.Monospace)
@@ -423,3 +423,4 @@ private fun statRow(label: String, value: String, valueColor: androidx.compose.u
 }
 
 private fun Double.roundToInt() = this.roundToInt()
+
