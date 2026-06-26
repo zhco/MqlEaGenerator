@@ -46,9 +46,9 @@ fun AdvancedScreen(
             item {
                 val targets = listOf("Sharpe" to "夏普比率", "NetProfit" to "净利润", "WinRate" to "胜率", "ProfitFactor" to "盈利因子")
                 var expT by remember { mutableStateOf(false) }
-                Box(Modifier.fillMaxWidth()) {
+                Box(Modifier.fillMaxWidth().clickable { expT = true }) {
                     val label = targets.find { it.first == geneticCfg.target }?.second ?: "夏普比率"
-                    OutlinedTextField("优化目标: $label", { expT = true }, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                    OutlinedTextField("优化目标: $label", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, enabled = false, colors = OutlinedTextFieldDefaults.colors().copy(disabledTextColor = MaterialTheme.colorScheme.onSurface, disabledBorderColor = MaterialTheme.colorScheme.outline, disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant))
                     DropdownMenu(expT, { expT = false }) { targets.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onGenetic(geneticCfg.copy(target = v)); expT = false }) } }
                 }
             }

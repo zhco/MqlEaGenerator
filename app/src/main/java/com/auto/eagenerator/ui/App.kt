@@ -179,21 +179,21 @@ fun StrategyScreen(
                     // Indicator + direction
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         var expInd by remember { mutableStateOf(false) }
-                        Box(Modifier.weight(1f)) {
-                            OutlinedTextField(e.indicator.label, { expInd = true }, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                        Box(Modifier.weight(1f).clickable { expInd = true }) {
+                            OutlinedTextField(e.indicator.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, enabled = false, colors = OutlinedTextFieldDefaults.colors().copy(disabledTextColor = MaterialTheme.colorScheme.onSurface, disabledBorderColor = MaterialTheme.colorScheme.outline, disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant))
                             DropdownMenu(expInd, { expInd = false }) { INDICATOR_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(indicator = t) else it }); expInd = false }) } }
                         }
                         var expDir by remember { mutableStateOf(false) }
-                        Box(Modifier.weight(0.7f)) {
+                        Box(Modifier.weight(0.7f).clickable { expDir = true }) {
                             val dText = DIR_OPTIONS.find { it.first == e.direction }?.second ?: "双向"
-                            OutlinedTextField(dText, { expDir = true }, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                            OutlinedTextField(dText, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, enabled = false, colors = OutlinedTextFieldDefaults.colors().copy(disabledTextColor = MaterialTheme.colorScheme.onSurface, disabledBorderColor = MaterialTheme.colorScheme.outline, disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant))
                             DropdownMenu(expDir, { expDir = false }) { DIR_OPTIONS.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(direction = v) else it }); expDir = false }) } }
                         }
                         // Logic op
                         if (i > 0) {
                             var expL by remember { mutableStateOf(false) }
-                            Box(Modifier.weight(0.4f)) {
-                                OutlinedTextField(if (e.logicOp == LogicOp.AND) "AND" else "OR", { expL = true }, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                            Box(Modifier.weight(0.4f).clickable { expL = true }) {
+                                OutlinedTextField(if (e.logicOp == LogicOp.AND) "AND" else "OR", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, enabled = false, colors = OutlinedTextFieldDefaults.colors().copy(disabledTextColor = MaterialTheme.colorScheme.onSurface, disabledBorderColor = MaterialTheme.colorScheme.outline, disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant))
                                 DropdownMenu(expL, { expL = false }) {
                                     DropdownMenuItem(text = { Text("AND") }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(logicOp = LogicOp.AND) else it }); expL = false })
                                     DropdownMenuItem(text = { Text("OR") }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(logicOp = LogicOp.OR) else it }); expL = false })
@@ -203,15 +203,15 @@ fun StrategyScreen(
                     }
                     // Timeframe
                     var expTF by remember { mutableStateOf(false) }
-                    Box(Modifier.fillMaxWidth()) {
+                    Box(Modifier.fillMaxWidth().clickable { expTF = true }) {
                         val tfText = TF_OPTIONS.find { it.first == e.timeframe }?.second ?: "当前"
-                        OutlinedTextField("时框: $tfText", { expTF = true }, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                        OutlinedTextField("时框: $tfText", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, enabled = false, colors = OutlinedTextFieldDefaults.colors().copy(disabledTextColor = MaterialTheme.colorScheme.onSurface, disabledBorderColor = MaterialTheme.colorScheme.outline, disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant))
                         DropdownMenu(expTF, { expTF = false }) { TF_OPTIONS.forEach { (v, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(timeframe = v) else it }); expTF = false }) } }
                     }
                     // Entry order type
                     var expOrd by remember { mutableStateOf(false) }
-                    Box(Modifier.fillMaxWidth()) {
-                        OutlinedTextField("入场方式: ${e.entryType.label}", { expOrd = true }, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                    Box(Modifier.fillMaxWidth().clickable { expOrd = true }) {
+                        OutlinedTextField("入场方式: ${e.entryType.label}", {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, enabled = false, colors = OutlinedTextFieldDefaults.colors().copy(disabledTextColor = MaterialTheme.colorScheme.onSurface, disabledBorderColor = MaterialTheme.colorScheme.outline, disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant))
                         DropdownMenu(expOrd, { expOrd = false }) { ORDER_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(entryType = t) else it }); expOrd = false }) } }
                     }
                     if (e.entryType == EntryOrderType.LIMIT) {
@@ -292,8 +292,8 @@ fun StrategyScreen(
                 Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     Row(Modifier.fillMaxWidth()) { Text("${i + 1}.", fontWeight = FontWeight.Bold, fontSize = 14.sp); Spacer(Modifier.weight(1f)); if (i > 0) TextButton({ onExits(exits.filter { it.id != ex.id }) }) { Text("✕", color = MaterialTheme.colorScheme.error) } }
                     var expExit by remember { mutableStateOf(false) }
-                    Box(Modifier.fillMaxWidth()) {
-                        OutlinedTextField(ex.exitType.label, { expExit = true }, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") })
+                    Box(Modifier.fillMaxWidth().clickable { expExit = true }) {
+                        OutlinedTextField(ex.exitType.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { Text("▾") }, enabled = false, colors = OutlinedTextFieldDefaults.colors().copy(disabledTextColor = MaterialTheme.colorScheme.onSurface, disabledBorderColor = MaterialTheme.colorScheme.outline, disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant))
                         DropdownMenu(expExit, { expExit = false }) { EXIT_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onExits(exits.map { if (it.id == ex.id) it.copy(exitType = t) else it }); expExit = false }) } }
                     }
                     when (ex.exitType) {
@@ -337,8 +337,8 @@ fun StrategyScreen(
         item { SectionTitle("═══ 资金管理 ═══") }
         item {
             var expMM by remember { mutableStateOf(false) }
-            Box(Modifier.fillMaxWidth()) {
-                OutlinedTextField(money.mmType.label, { expMM = true }, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 13.sp), trailingIcon = { Text("▾") })
+            Box(Modifier.fillMaxWidth().clickable { expMM = true }) {
+                OutlinedTextField(money.mmType.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 13.sp), trailingIcon = { Text("▾") }, enabled = false, colors = OutlinedTextFieldDefaults.colors().copy(disabledTextColor = MaterialTheme.colorScheme.onSurface, disabledBorderColor = MaterialTheme.colorScheme.outline, disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant))
                 DropdownMenu(expMM, { expMM = false }) { MM_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onMoney(money.copy(mmType = t)); expMM = false }) } }
             }
         }
@@ -437,8 +437,8 @@ fun StrategyScreen(
                 item {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                         var expW by remember { mutableStateOf(false) }
-                        Box(Modifier.weight(1.2f)) {
-                            OutlinedTextField(w.indicator.label, { expW = true }, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 11.sp), trailingIcon = { Text("▾") })
+                        Box(Modifier.weight(1.2f).clickable { expW = true }) {
+                            OutlinedTextField(w.indicator.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth(), textStyle = LocalTextStyle.current.copy(fontSize = 11.sp), trailingIcon = { Text("▾") }, enabled = false, colors = OutlinedTextFieldDefaults.colors().copy(disabledTextColor = MaterialTheme.colorScheme.onSurface, disabledBorderColor = MaterialTheme.colorScheme.outline, disabledLabelColor = MaterialTheme.colorScheme.onSurfaceVariant))
                             DropdownMenu(expW, { expW = false }) { INDICATOR_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { val nl = signalFusion.weights.toMutableList(); nl[j] = w.copy(indicator = t); onFusion(signalFusion.copy(weights = nl)); expW = false }) } }
                         }
                         OutlinedTextField(w.weight.toString(), { val nl = signalFusion.weights.toMutableList(); nl[j] = w.copy(weight = it.toDoubleOrNull() ?: 1.0); onFusion(signalFusion.copy(weights = nl)) }, label = { Text("权重") }, singleLine = true, modifier = Modifier.weight(0.8f), textStyle = LocalTextStyle.current.copy(fontSize = 11.sp))
