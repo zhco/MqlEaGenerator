@@ -295,6 +295,28 @@ fun StrategyScreen(
                             OutlinedTextField(e.sarStep.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(sarStep = v.toDoubleOrNull() ?: 0.02) else it }) }, label = { Text("步长") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                             OutlinedTextField(e.sarMax.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(sarMax = v.toDoubleOrNull() ?: 0.2) else it }) }, label = { Text("最大") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
                         }
+                        IndicatorType.ICHIMOKU -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            OutlinedTextField(e.tenkan.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(tenkan = v.toIntOrNull() ?: 9) else it }) }, label = { Text("转换线") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            OutlinedTextField(e.kijun.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(kijun = v.toIntOrNull() ?: 26) else it }) }, label = { Text("基准线") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            OutlinedTextField(e.senkou.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(senkou = v.toIntOrNull() ?: 52) else it }) }, label = { Text("先行跨度") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                        }
+                        IndicatorType.ALLIGATOR -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            OutlinedTextField(e.jawPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(jawPeriod = v.toIntOrNull() ?: 13) else it }) }, label = { Text("下巴") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            OutlinedTextField(e.teethPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(teethPeriod = v.toIntOrNull() ?: 8) else it }) }, label = { Text("牙齿") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            OutlinedTextField(e.lipsPeriod.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(lipsPeriod = v.toIntOrNull() ?: 5) else it }) }, label = { Text("嘴唇") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                        }
+                        IndicatorType.CANDLE_PATTERN -> {
+                            var expCP by remember { mutableStateOf(false) }
+                            ExposedDropdownMenuBox(expCP, { expCP = it }) {
+                                val cpLabel = CANDLE_PATTERNS.find { it.first == e.candlePattern }?.second ?: "吞没"
+                                OutlinedTextField(cpLabel, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expCP) })
+                                ExposedDropdownMenu(expCP, { expCP = false }) { CANDLE_PATTERNS.forEach { (v,l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onEntries(entries.map { if (it.id == e.id) it.copy(candlePattern = v) else it }); expCP = false }) } }
+                            }
+                        }
+                        IndicatorType.VOLUME -> Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                            OutlinedTextField(e.volumeThreshold.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(volumeThreshold = v.toDoubleOrNull() ?: 1.5) else it }) }, label = { Text("放量倍数") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            OutlinedTextField(e.lookbackBars.toString(), { v -> onEntries(entries.map { if (it.id == e.id) it.copy(lookbackBars = v.toIntOrNull() ?: 20) else it }) }, label = { Text("回溯K线") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                        }
                         else -> {}
                     }
                 }
