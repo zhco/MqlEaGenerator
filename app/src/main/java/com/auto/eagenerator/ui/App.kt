@@ -425,7 +425,6 @@ fun StrategyScreen(
                         var expW by remember { mutableStateOf(false) }
                         OutlinedTextField(w.indicator.label, {}, readOnly = true, singleLine = true, modifier = Modifier.weight(1.2f).clickable { expW = true }, textStyle = LocalTextStyle.current.copy(fontSize = 11.sp), trailingIcon = { Text("▾") })
                         DropdownMenu(expW, { expW = false }) { INDICATOR_OPTIONS.forEach { (t, l) -> DropdownMenuItem(text = { Text(l) }, onClick = { val nl = signalFusion.weights.toMutableList(); nl[j] = w.copy(indicator = t); onFusion(signalFusion.copy(weights = nl)); expW = false }) } }
-                        }
                         OutlinedTextField(w.weight.toString(), { val nl = signalFusion.weights.toMutableList(); nl[j] = w.copy(weight = it.toDoubleOrNull() ?: 1.0); onFusion(signalFusion.copy(weights = nl)) }, label = { Text("权重") }, singleLine = true, modifier = Modifier.weight(0.8f), textStyle = LocalTextStyle.current.copy(fontSize = 11.sp))
                         OutlinedTextField(w.minStrength.toString(), { val nl = signalFusion.weights.toMutableList(); nl[j] = w.copy(minStrength = it.toDoubleOrNull() ?: 0.0); onFusion(signalFusion.copy(weights = nl)) }, label = { Text("最小强度") }, singleLine = true, modifier = Modifier.weight(0.8f), textStyle = LocalTextStyle.current.copy(fontSize = 11.sp))
                     }
