@@ -365,6 +365,18 @@ fun StrategyScreen(
                                 }
                             }
                         }
+                        ExitType.INDICATOR_EXIT -> {
+                            var expEInd by remember { mutableStateOf(false) }
+                            ExposedDropdownMenuBox(expEInd, { expEInd = it }) {
+                                OutlinedTextField(ex.exitIndicator.label, {}, readOnly = true, singleLine = true, modifier = Modifier.fillMaxWidth().menuAnchor(), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp), trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expEInd) })
+                                ExposedDropdownMenu(expEInd, { expEInd = false }) { INDICATOR_OPTIONS.forEach { (t,l) -> DropdownMenuItem(text = { Text(l) }, onClick = { onExits(exits.map { if (it.id == ex.id) it.copy(exitIndicator = t) else it }); expEInd = false }) } }
+                            }
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                                OutlinedTextField(ex.exitIndicatorPeriod.toString(), { v -> onExits(exits.map { if (it.id == ex.id) it.copy(exitIndicatorPeriod = v.toIntOrNull() ?: 14) else it }) }, label = { Text("周期") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                                OutlinedTextField(ex.exitObLevel.toString(), { v -> onExits(exits.map { if (it.id == ex.id) it.copy(exitObLevel = v.toDoubleOrNull() ?: 70.0) else it }) }, label = { Text("超买") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                                OutlinedTextField(ex.exitOsLevel.toString(), { v -> onExits(exits.map { if (it.id == ex.id) it.copy(exitOsLevel = v.toDoubleOrNull() ?: 30.0) else it }) }, label = { Text("超卖") }, singleLine = true, modifier = Modifier.weight(1f), textStyle = LocalTextStyle.current.copy(fontSize = 12.sp))
+                            }
+                        }
                         else -> {}
                     }
                 }
