@@ -65,13 +65,13 @@ object BacktestEngine {
 
         config.entries.forEach { e ->
             when (e.indicator) {
-                IndicatorType.MA_CROSS, IndicatorType.MA_TREND, IndicatorType.MA_PRICE -> {
+                IndicatorType.MA, IndicatorType.MA, IndicatorType.PRICE -> {
                     maPeriods += e.fastPeriod to e.maMethod
                     maPeriods += e.slowPeriod to e.maMethod
-                    if (e.indicator == IndicatorType.MA_TREND) maPeriods += e.midPeriod to e.maMethod
+                    if (e.indicator == IndicatorType.MA) maPeriods += e.midPeriod to e.maMethod
                 }
-                IndicatorType.RSI, IndicatorType.RSI_DIVERGENCE -> rsiPeriods += e.period
-                IndicatorType.MACD, IndicatorType.MACD_DIVERGENCE -> macdSets += Triple(e.fastPeriod, e.slowPeriod, e.period)
+                IndicatorType.RSI, IndicatorType.RSI -> rsiPeriods += e.period
+                IndicatorType.MACD, IndicatorType.MACD -> macdSets += Triple(e.fastPeriod, e.slowPeriod, e.period)
                 IndicatorType.BOLLINGER -> bbSets += e.bbPeriod to e.bbDeviation
                 IndicatorType.ATR -> atrPeriods += e.atrPeriod
                 IndicatorType.ADX -> adxPeriods += e.period
@@ -232,12 +232,12 @@ object BacktestEngine {
         val close = DoubleArray(candles.size) { candles[it].close }
         val results = cfg.entries.map { e ->
             when (e.indicator) {
-                IndicatorType.MA_CROSS -> {
+                IndicatorType.MA -> {
                     val f = buf.ma["${e.fastPeriod}_${e.maMethod}"] ?: return@map 0
                     val s = buf.ma["${e.slowPeriod}_${e.maMethod}"] ?: return@map 0
                     if (i < 1) 0 else if (f[i - 1] <= s[i - 1] && f[i] > s[i]) 1 else if (f[i - 1] >= s[i - 1] && f[i] < s[i]) -1 else 0
                 }
-                IndicatorType.MA_PRICE -> {
+                IndicatorType.PRICE -> {
                     val m = buf.ma["${e.fastPeriod}_${e.maMethod}"] ?: return@map 0
                     if (i < 1) 0 else if (close[i - 1] < m[i - 1] && close[i] > m[i]) 1 else if (close[i - 1] > m[i - 1] && close[i] < m[i]) -1 else 0
                 }
@@ -263,7 +263,7 @@ object BacktestEngine {
                     val c = buf.cci[e.period] ?: return@map 0
                     if (c[i] < -e.obLevel) 1 else if (c[i] > e.obLevel) -1 else 0
                 }
-                IndicatorType.PRICE_BREAK -> {
+                IndicatorType.PRICE -> {
                     val hh = (0 until e.lookbackBars).maxOfOrNull { candles[i - it].high } ?: return@map 0
                     val ll = (0 until e.lookbackBars).minOfOrNull { candles[i - it].low } ?: return@map 0
                     if (close[i] > hh) 1 else if (close[i] < ll) -1 else 0
