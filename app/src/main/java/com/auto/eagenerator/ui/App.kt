@@ -542,7 +542,7 @@ fun StrategyScreen(
                 }
             }
             item { Row(Modifier.fillMaxWidth()) { Spacer(Modifier.weight(1f))
-                TextButton({ onFusion(signalFusion.copy(weights = signalFusion.weights + SignalWeight(IndicatorType.MA_CROSS, 1.0))) }) { Text("+权重", fontSize = 11.sp) }
+                TextButton({ onFusion(signalFusion.copy(weights = signalFusion.weights + SignalWeight(IndicatorType.MA, 1.0))) }) { Text("+权重", fontSize = 11.sp) }
             }}
         }
 
