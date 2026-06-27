@@ -37,8 +37,6 @@ object StrategyEngine {
                     if (e.indicator == IndicatorType.MA) {
                         refs += IndicatorRef(
                             "e${e.id}_m",
-                            if (isMQL5) "iMA(_Symbol,PERIOD_CURRENT,${e.midPeriod},0,MODE_${e.maMethod.uppercase()},PRICE_CLOSE)"
-                            else "iMA(_Symbol,0,${e.midPeriod},0,MODE_${e.maMethod.uppercase()},PRICE_CLOSE)"
                         )
                     }
                 }
