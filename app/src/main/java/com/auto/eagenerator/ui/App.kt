@@ -37,6 +37,16 @@ val MM_OPTIONS = MoneyManagement.entries.map { it to it.label }
 val MA_METHODS = listOf("SMA" to "SMA", "EMA" to "EMA", "SMMA" to "SMMA", "LWMA" to "LWMA")
 val APPLIED_PRICES = listOf("Close" to "收盘", "Open" to "开盘", "High" to "最高", "Low" to "最低", "Median" to "中位", "Typical" to "典型", "Weighted" to "加权")
 val CANDLE_PATTERNS = listOf("Engulfing" to "吞没", "Hammer" to "锤子", "ShootingStar" to "射击之星", "Doji" to "十字星", "MorningStar" to "晨星", "EveningStar" to "黄昏之星", "Harami" to "孕线", "Piercing" to "刺透", "DarkCloud" to "乌云盖顶", "ThreeWhite" to "三白兵", "ThreeBlack" to "三乌鸦")
+val COMPARISON_OPTIONS = ComparisonOp.entries.map { it to it.label }
+val TARGET_TYPE_OPTIONS = TargetType.entries.map { it to it.label }
+val PRICE_OPTIONS = APPLIED_PRICES
+val BUFFER_OPTIONS_SINGLE = listOf(0 to "当前值(0)", 1 to "前1根(1)", 2 to "前2根(2)")
+val BUFFER_OPTIONS_MA = BUFFER_OPTIONS_SINGLE + listOf(3 to "前3根(3)")
+val BUFFER_OPTIONS_MACD = listOf(0 to "主线(0)", 1 to "信号线(1)", 2 to "柱线(2)")
+val BUFFER_OPTIONS_BB = listOf(0 to "中轨(0)", 1 to "上轨(1)", 2 to "下轨(2)")
+val BUFFER_OPTIONS_STOCH = listOf(0 to "主线%K(0)", 1 to "信号线%D(1)")
+val BUFFER_OPTIONS_ICHI = listOf(0 to "転換線(0)", 1 to "基準線(1)", 2 to "先行A(2)", 3 to "先行B(3)")
+val BUFFER_OPTIONS_ALLI = listOf(0 to "顎線(0)", 1 to "歯線(1)", 2 to "唇線(2)")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -634,4 +644,5 @@ fun SectionTitle(text: String) {
     Text(text, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(top = 8.dp, bottom = 2.dp))
 }
+
 
