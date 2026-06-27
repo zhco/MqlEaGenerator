@@ -69,25 +69,25 @@ object Mql4Generator {
                     sb.append("extern double InpE${n}_Sig = ${e.customIndiSignal};\n")
                 }
                 IndicatorType.CUSTOM_EXPRESSION -> sb.append("extern string InpE${n}_Expr = \"\";\n")
-                IndicatorType.MA_CROSS, IndicatorType.MA_TREND -> {
+                IndicatorType.MA, IndicatorType.MA -> {
                     sb.append("extern int  InpE${n}_F = ${e.fastPeriod}; extern int InpE${n}_S = ${e.slowPeriod};\n")
-                    if (e.indicator == IndicatorType.MA_TREND) sb.append("extern int InpE${n}_M = ${e.midPeriod};\n")
+                    if (e.indicator == IndicatorType.MA) sb.append("extern int InpE${n}_M = ${e.midPeriod};\n")
                     sb.append("extern int  InpE${n}_MAM = MODE_${e.maMethod.uppercase()};\n")
                 }
-                IndicatorType.MA_PRICE -> {
+                IndicatorType.PRICE -> {
                     sb.append("extern int  InpE${n}_F = ${e.fastPeriod}; extern int InpE${n}_MAM = MODE_${e.maMethod.uppercase()};\n")
                 }
                 IndicatorType.RSI -> sb.append("extern int  InpE${n}_P = ${e.period}; extern double InpE${n}_OB = ${e.obLevel}; extern double InpE${n}_OS = ${e.osLevel};\n")
-                IndicatorType.RSI_DIVERGENCE -> sb.append("extern int  InpE${n}_P = ${e.period}; extern int InpE${n}_DivLB = ${e.divLookback};\n")
+                IndicatorType.RSI -> sb.append("extern int  InpE${n}_P = ${e.period}; extern int InpE${n}_DivLB = ${e.divLookback};\n")
                 IndicatorType.STOCH -> sb.append("extern int  InpE${n}_K = ${e.kPeriod}; extern int InpE${n}_D = ${e.dPeriod}; extern int InpE${n}_Sl = ${e.slowing}; extern double InpE${n}_OB = ${e.obLevel}; extern double InpE${n}_OS = ${e.osLevel};\n")
                 IndicatorType.MACD -> sb.append("extern int  InpE${n}_F = ${e.fastPeriod}; extern int InpE${n}_S = ${e.slowPeriod}; extern int InpE${n}_Sig = ${e.period};\n")
-                IndicatorType.MACD_DIVERGENCE -> sb.append("extern int  InpE${n}_F = ${e.fastPeriod}; extern int InpE${n}_S = ${e.slowPeriod}; extern int InpE${n}_Sig = ${e.period}; extern int InpE${n}_DivLB = ${e.divLookback};\n")
+                IndicatorType.MACD -> sb.append("extern int  InpE${n}_F = ${e.fastPeriod}; extern int InpE${n}_S = ${e.slowPeriod}; extern int InpE${n}_Sig = ${e.period}; extern int InpE${n}_DivLB = ${e.divLookback};\n")
                 IndicatorType.BOLLINGER -> sb.append("extern int  InpE${n}_P = ${e.bbPeriod}; extern double InpE${n}_Dv = ${e.bbDeviation};\n")
                 IndicatorType.ADX -> sb.append("extern int  InpE${n}_P = ${e.period}; extern double InpE${n}_Lv = ${e.adxLevel};\n")
                 IndicatorType.SAR -> sb.append("extern double InpE${n}_St = ${e.sarStep}; extern double InpE${n}_Mx = ${e.sarMax};\n")
                 IndicatorType.CCI -> sb.append("extern int  InpE${n}_P = ${e.period}; extern double InpE${n}_OB = ${e.obLevel}; extern double InpE${n}_OS = ${e.osLevel};\n")
                 IndicatorType.ATR -> sb.append("extern int  InpE${n}_P = ${e.atrPeriod}; extern double InpE${n}_M = ${e.atrMultiplier};\n")
-                IndicatorType.PRICE_BREAK -> sb.append("extern int  InpE${n}_LB = ${e.lookbackBars};\n")
+                IndicatorType.PRICE -> sb.append("extern int  InpE${n}_LB = ${e.lookbackBars};\n")
                 IndicatorType.ICHIMOKU -> sb.append("extern int  InpE${n}_T = ${e.tenkan}; extern int InpE${n}_K = ${e.kijun}; extern int InpE${n}_S = ${e.senkou};\n")
                 IndicatorType.ALLIGATOR -> sb.append("extern int  InpE${n}_J = ${e.jawPeriod}; extern int InpE${n}_T = ${e.teethPeriod}; extern int InpE${n}_L = ${e.lipsPeriod};\n")
                 IndicatorType.CANDLE_PATTERN -> sb.append("extern string InpE${n}_CP = \"${e.candlePattern}\";\n")
@@ -476,11 +476,11 @@ object Mql4Generator {
                 else -> {
                     sb.append("bool EvalEntry${e.id}(string sym) {\n")
                     when (e.indicator) {
-                        IndicatorType.MA_CROSS -> {
+                        IndicatorType.MA -> {
                             sb.append("   double f1 = iMA(sym, 0, InpE${n}_F, 0, InpE${n}_MAM, PRICE_CLOSE, 1);\n   double s1 = iMA(sym, 0, InpE${n}_S, 0, InpE${n}_MAM, PRICE_CLOSE, 1);\n   double f0 = iMA(sym, 0, InpE${n}_F, 0, InpE${n}_MAM, PRICE_CLOSE, 0);\n   double s0 = iMA(sym, 0, InpE${n}_S, 0, InpE${n}_MAM, PRICE_CLOSE, 0);\n")
                             when (e.direction) { "BuyOnly" -> sb.append("   return (f1 <= s1 && f0 > s0);\n"); "SellOnly" -> sb.append("   return (f1 >= s1 && f0 < s0);\n"); else -> sb.append("   return (f1 <= s1 && f0 > s0) || (f1 >= s1 && f0 < s0);\n") }
                         }
-                        IndicatorType.MA_PRICE -> {
+                        IndicatorType.PRICE -> {
                             sb.append("   double ma = iMA(sym, 0, InpE${n}_F, 0, InpE${n}_MAM, PRICE_CLOSE, 0);\n")
                             sb.append("   double p1 = iClose(sym, 0, 1); double p0 = iClose(sym, 0, 0);\n")
                             when (e.direction) { "BuyOnly" -> sb.append("   return (p1 < ma && p0 > ma);\n"); "SellOnly" -> sb.append("   return (p1 > ma && p0 < ma);\n"); else -> sb.append("   return (p1 < ma && p0 > ma) || (p1 > ma && p0 < ma);\n") }
@@ -489,7 +489,7 @@ object Mql4Generator {
                             sb.append("   double r = iRSI(sym, 0, InpE${n}_P, PRICE_CLOSE, 0);\n")
                             when (e.direction) { "BuyOnly" -> sb.append("   return (r < InpE${n}_OS);\n"); "SellOnly" -> sb.append("   return (r > InpE${n}_OB);\n"); else -> sb.append("   return (r < InpE${n}_OS) || (r > InpE${n}_OB);\n") }
                         }
-                        IndicatorType.RSI_DIVERGENCE -> {
+                        IndicatorType.RSI -> {
                             sb.append("   double r0 = iRSI(sym, 0, InpE${n}_P, PRICE_CLOSE, 0);\n   double rL = iRSI(sym, 0, InpE${n}_P, PRICE_CLOSE, InpE${n}_DivLB);\n")
                             sb.append("   double hh = High[iHighest(sym, 0, MODE_HIGH, InpE${n}_DivLB, 1)]; double ll = Low[iLowest(sym, 0, MODE_LOW, InpE${n}_DivLB, 1)];\n")
                             sb.append("   return (Ask > hh && r0 < rL) || (Bid < ll && r0 > rL);\n")
@@ -497,7 +497,7 @@ object Mql4Generator {
                         IndicatorType.MACD -> {
                             sb.append("   double m1 = iMACD(sym, 0, InpE${n}_F, InpE${n}_S, InpE${n}_Sig, PRICE_CLOSE, MODE_MAIN, 1);\n   double g1 = iMACD(sym, 0, InpE${n}_F, InpE${n}_S, InpE${n}_Sig, PRICE_CLOSE, MODE_SIGNAL, 1);\n   double m0 = iMACD(sym, 0, InpE${n}_F, InpE${n}_S, InpE${n}_Sig, PRICE_CLOSE, MODE_MAIN, 0);\n   double g0 = iMACD(sym, 0, InpE${n}_F, InpE${n}_S, InpE${n}_Sig, PRICE_CLOSE, MODE_SIGNAL, 0);\n   return (m1 <= g1 && m0 > g0) || (m1 >= g1 && m0 < g0);\n")
                         }
-                        IndicatorType.MACD_DIVERGENCE -> {
+                        IndicatorType.MACD -> {
                             sb.append("   double m0 = iMACD(sym, 0, InpE${n}_F, InpE${n}_S, InpE${n}_Sig, PRICE_CLOSE, MODE_MAIN, 0);\n   double mL = iMACD(sym, 0, InpE${n}_F, InpE${n}_S, InpE${n}_Sig, PRICE_CLOSE, MODE_MAIN, InpE${n}_DivLB);\n")
                             sb.append("   double hh = High[iHighest(sym, 0, MODE_HIGH, InpE${n}_DivLB, 1)]; double ll = Low[iLowest(sym, 0, MODE_LOW, InpE${n}_DivLB, 1)];\n")
                             sb.append("   return (Ask > hh && m0 < mL) || (Bid < ll && m0 > mL);\n")
@@ -505,7 +505,7 @@ object Mql4Generator {
                         IndicatorType.BOLLINGER -> {
                             sb.append("   double u = iBands(sym, 0, InpE${n}_P, InpE${n}_Dv, 0, PRICE_CLOSE, MODE_UPPER, 0);\n   double l = iBands(sym, 0, InpE${n}_P, InpE${n}_Dv, 0, PRICE_CLOSE, MODE_LOWER, 0);\n   return (Close[0] <= l) || (Close[0] >= u);\n")
                         }
-                        IndicatorType.PRICE_BREAK -> {
+                        IndicatorType.PRICE -> {
                             sb.append("   double hh = High[iHighest(sym, 0, MODE_HIGH, InpE${n}_LB, 1)]; double ll = Low[iLowest(sym, 0, MODE_LOW, InpE${n}_LB, 1)];\n")
                             when (e.direction) { "BuyOnly" -> sb.append("   return (Ask > hh);\n"); "SellOnly" -> sb.append("   return (Bid < ll);\n"); else -> sb.append("   return (Ask > hh) || (Bid < ll);\n") }
                         }
@@ -617,4 +617,3 @@ object Mql4Generator {
 
     fun appendFooter(sb: StringBuilder) { sb.append("//+------------------------------------------------------------------+\n") }
 }
-
