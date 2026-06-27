@@ -71,17 +71,14 @@ object Mql4Generator {
                 IndicatorType.CUSTOM_EXPRESSION -> sb.append("extern string InpE${n}_Expr = \"\";\n")
                 IndicatorType.MA, IndicatorType.MA -> {
                     sb.append("extern int  InpE${n}_F = ${e.fastPeriod}; extern int InpE${n}_S = ${e.slowPeriod};\n")
-                    if (e.indicator == IndicatorType.MA) sb.append("extern int InpE${n}_M = ${e.midPeriod};\n")
                     sb.append("extern int  InpE${n}_MAM = MODE_${e.maMethod.uppercase()};\n")
                 }
                 IndicatorType.PRICE -> {
                     sb.append("extern int  InpE${n}_F = ${e.fastPeriod}; extern int InpE${n}_MAM = MODE_${e.maMethod.uppercase()};\n")
                 }
                 IndicatorType.RSI -> sb.append("extern int  InpE${n}_P = ${e.period}; extern double InpE${n}_OB = ${e.obLevel}; extern double InpE${n}_OS = ${e.osLevel};\n")
-                IndicatorType.RSI -> sb.append("extern int  InpE${n}_P = ${e.period}; extern int InpE${n}_DivLB = ${e.divLookback};\n")
                 IndicatorType.STOCH -> sb.append("extern int  InpE${n}_K = ${e.kPeriod}; extern int InpE${n}_D = ${e.dPeriod}; extern int InpE${n}_Sl = ${e.slowing}; extern double InpE${n}_OB = ${e.obLevel}; extern double InpE${n}_OS = ${e.osLevel};\n")
                 IndicatorType.MACD -> sb.append("extern int  InpE${n}_F = ${e.fastPeriod}; extern int InpE${n}_S = ${e.slowPeriod}; extern int InpE${n}_Sig = ${e.period};\n")
-                IndicatorType.MACD -> sb.append("extern int  InpE${n}_F = ${e.fastPeriod}; extern int InpE${n}_S = ${e.slowPeriod}; extern int InpE${n}_Sig = ${e.period}; extern int InpE${n}_DivLB = ${e.divLookback};\n")
                 IndicatorType.BOLLINGER -> sb.append("extern int  InpE${n}_P = ${e.bbPeriod}; extern double InpE${n}_Dv = ${e.bbDeviation};\n")
                 IndicatorType.ADX -> sb.append("extern int  InpE${n}_P = ${e.period}; extern double InpE${n}_Lv = ${e.adxLevel};\n")
                 IndicatorType.SAR -> sb.append("extern double InpE${n}_St = ${e.sarStep}; extern double InpE${n}_Mx = ${e.sarMax};\n")
