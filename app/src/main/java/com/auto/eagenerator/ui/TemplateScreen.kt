@@ -19,7 +19,7 @@ fun TemplateScreen(cfg: StrategyConfig, modifier: Modifier = Modifier) {
     val templates = remember {
         listOf(
             StrategyTemplate("均线金叉趋势", "双均线金叉+趋势过滤，适合H1/D1趋势跟随", "Trend", "MQL5",
-                listOf(EntryCondition(1, IndicatorType.MA_CROSS), EntryCondition(2, IndicatorType.ADX, logicOp = LogicOp.AND)),
+                listOf(EntryCondition(1, IndicatorType.MA), EntryCondition(2, IndicatorType.ADX, logicOp = LogicOp.AND)),
                 listOf(ExitRule(1, ExitType.FIXED_SLTP), ExitRule(2, ExitType.TRAILING)),
                 MoneyRule(MoneyManagement.RISK_PERCENT),
                 tags = listOf("趋势", "均线"), difficulty = "初级",
@@ -31,7 +31,7 @@ fun TemplateScreen(cfg: StrategyConfig, modifier: Modifier = Modifier) {
                 tags = listOf("震荡", "均值回归"), difficulty = "中级",
                 timeframes = listOf("M15", "H1"), bestMarket = "震荡市场"),
             StrategyTemplate("MACD背离反转", "MACD顶底背离捕捉反转点，配合Stochastic确认", "Trend", "MQL5",
-                listOf(EntryCondition(1, IndicatorType.MACD_DIVERGENCE), EntryCondition(2, IndicatorType.STOCH, logicOp = LogicOp.AND)),
+                listOf(EntryCondition(1, IndicatorType.MACD), EntryCondition(2, IndicatorType.STOCH, logicOp = LogicOp.AND)),
                 listOf(ExitRule(1, ExitType.TRAILING, trailingStart = 150)),
                 MoneyRule(MoneyManagement.ATR_BASED),
                 tags = listOf("反转", "背离"), difficulty = "高级",
@@ -49,7 +49,7 @@ fun TemplateScreen(cfg: StrategyConfig, modifier: Modifier = Modifier) {
                 tags = listOf("云图", "趋势/金字塔"), difficulty = "高级",
                 timeframes = listOf("H4", "D1"), bestMarket = "强趋势市场"),
             StrategyTemplate("网格多指标", "结合多个指标信号融合的网格策略", "MultiIndi", "MQL5",
-                listOf(EntryCondition(1, IndicatorType.MA_CROSS), EntryCondition(2, IndicatorType.RSI, logicOp = LogicOp.OR)),
+                listOf(EntryCondition(1, IndicatorType.MA), EntryCondition(2, IndicatorType.RSI, logicOp = LogicOp.OR)),
                 listOf(ExitRule(1, ExitType.PARTIAL_CLOSE)),
                 MoneyRule(MoneyManagement.GRID),
                 tags = listOf("网格", "多指标"), difficulty = "高级",
