@@ -23,7 +23,7 @@ object StrategyEngine {
                         "iCustom(_Symbol, 0, \"${e.customIndiName}\"${if (params.isNotBlank()) ", $params" else ""})"
                     refs += IndicatorRef("e${e.id}_ic", init)
                 }
-                IndicatorType.MA_CROSS, IndicatorType.MA_TREND, IndicatorType.MA_PRICE -> {
+                IndicatorType.MA, IndicatorType.MA, IndicatorType.PRICE -> {
                     refs += IndicatorRef(
                         "e${e.id}_f",
                         if (isMQL5) "iMA(_Symbol,PERIOD_CURRENT,${e.fastPeriod},0,MODE_${e.maMethod.uppercase()},PRICE_CLOSE)"
@@ -34,7 +34,7 @@ object StrategyEngine {
                         if (isMQL5) "iMA(_Symbol,PERIOD_CURRENT,${e.slowPeriod},0,MODE_${e.maMethod.uppercase()},PRICE_CLOSE)"
                         else "iMA(_Symbol,0,${e.slowPeriod},0,MODE_${e.maMethod.uppercase()},PRICE_CLOSE)"
                     )
-                    if (e.indicator == IndicatorType.MA_TREND) {
+                    if (e.indicator == IndicatorType.MA) {
                         refs += IndicatorRef(
                             "e${e.id}_m",
                             if (isMQL5) "iMA(_Symbol,PERIOD_CURRENT,${e.midPeriod},0,MODE_${e.maMethod.uppercase()},PRICE_CLOSE)"
@@ -42,7 +42,7 @@ object StrategyEngine {
                         )
                     }
                 }
-                IndicatorType.RSI, IndicatorType.RSI_DIVERGENCE -> {
+                IndicatorType.RSI, IndicatorType.RSI -> {
                     refs += IndicatorRef(
                         "e${e.id}_rsi",
                         if (isMQL5) "iRSI(_Symbol,PERIOD_CURRENT,${e.period},PRICE_CLOSE)"
@@ -56,7 +56,7 @@ object StrategyEngine {
                         else "iStochastic(_Symbol,0,${e.kPeriod},${e.dPeriod},${e.slowing},MODE_SMA,0,STO_LOWHIGH)"
                     )
                 }
-                IndicatorType.MACD, IndicatorType.MACD_DIVERGENCE -> {
+                IndicatorType.MACD, IndicatorType.MACD -> {
                     refs += IndicatorRef(
                         "e${e.id}_macd",
                         if (isMQL5) "iMACD(_Symbol,PERIOD_CURRENT,${e.fastPeriod},${e.slowPeriod},${e.period},PRICE_CLOSE)"
