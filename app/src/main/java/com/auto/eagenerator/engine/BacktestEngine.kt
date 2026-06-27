@@ -68,7 +68,6 @@ object BacktestEngine {
                 IndicatorType.MA, IndicatorType.MA, IndicatorType.PRICE -> {
                     maPeriods += e.fastPeriod to e.maMethod
                     maPeriods += e.slowPeriod to e.maMethod
-                    if (e.indicator == IndicatorType.MA) maPeriods += e.midPeriod to e.maMethod
                 }
                 IndicatorType.RSI, IndicatorType.RSI -> rsiPeriods += e.period
                 IndicatorType.MACD, IndicatorType.MACD -> macdSets += Triple(e.fastPeriod, e.slowPeriod, e.period)
