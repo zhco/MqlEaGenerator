@@ -34,11 +34,6 @@ object StrategyEngine {
                         if (isMQL5) "iMA(_Symbol,PERIOD_CURRENT,${e.slowPeriod},0,MODE_${e.maMethod.uppercase()},PRICE_CLOSE)"
                         else "iMA(_Symbol,0,${e.slowPeriod},0,MODE_${e.maMethod.uppercase()},PRICE_CLOSE)"
                     )
-                    if (e.indicator == IndicatorType.MA) {
-                        refs += IndicatorRef(
-                            "e${e.id}_m",
-                        )
-                    }
                 }
                 IndicatorType.RSI, IndicatorType.RSI -> {
                     refs += IndicatorRef(
