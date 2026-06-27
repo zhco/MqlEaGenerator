@@ -198,7 +198,7 @@ data class MultiTFConfig(
 
 // ─── v6: AI信号融合 ───
 data class SignalWeight(
-    val indicator: IndicatorType = IndicatorType.MA_CROSS,
+    val indicator: IndicatorType = IndicatorType.MA,
     val weight: Double = 1.0,
     val minStrength: Double = 0.0,
 )
