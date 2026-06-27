@@ -77,22 +77,22 @@ object Mql5Generator {
                     sb.append("input double InpE${n}_SigVal = ${e.customIndiSignal}; // 信号阈值\n")
                 }
                 IndicatorType.CUSTOM_EXPRESSION -> sb.append("input string InpE${n}_Expr = \"\"; // MQL条件表达式\n")
-                IndicatorType.MA_CROSS, IndicatorType.MA_TREND, IndicatorType.MA_PRICE -> {
+                IndicatorType.MA, IndicatorType.MA, IndicatorType.PRICE -> {
                     sb.append("input int InpE${n}_F = ${e.fastPeriod}; input int InpE${n}_S = ${e.slowPeriod};\n")
-                    if (e.indicator == IndicatorType.MA_TREND) sb.append("input int InpE${n}_M = ${e.midPeriod};\n")
+                    if (e.indicator == IndicatorType.MA) sb.append("input int InpE${n}_M = ${e.midPeriod};\n")
                     sb.append("input ENUM_MA_METHOD InpE${n}_MAM = MODE_${e.maMethod.uppercase()};\n")
                 }
                 IndicatorType.RSI -> sb.append("input int InpE${n}_P = ${e.period}; input double InpE${n}_OB = ${e.obLevel}; input double InpE${n}_OS = ${e.osLevel};\n")
-                IndicatorType.RSI_DIVERGENCE -> sb.append("input int InpE${n}_P = ${e.period}; input int InpE${n}_DivLB = ${e.divLookback}; input int InpE${n}_DivMin = ${e.divMinStrength};\n")
+                IndicatorType.RSI -> sb.append("input int InpE${n}_P = ${e.period}; input int InpE${n}_DivLB = ${e.divLookback}; input int InpE${n}_DivMin = ${e.divMinStrength};\n")
                 IndicatorType.STOCH -> sb.append("input int InpE${n}_K = ${e.kPeriod}; input int InpE${n}_D = ${e.dPeriod}; input int InpE${n}_Sl = ${e.slowing}; input double InpE${n}_OB = ${e.obLevel}; input double InpE${n}_OS = ${e.osLevel};\n")
                 IndicatorType.MACD -> sb.append("input int InpE${n}_F = ${e.fastPeriod}; input int InpE${n}_S = ${e.slowPeriod}; input int InpE${n}_Sig = ${e.period};\n")
-                IndicatorType.MACD_DIVERGENCE -> sb.append("input int InpE${n}_F = ${e.fastPeriod}; input int InpE${n}_S = ${e.slowPeriod}; input int InpE${n}_Sig = ${e.period}; input int InpE${n}_DivLB = ${e.divLookback}; input int InpE${n}_DivMin = ${e.divMinStrength};\n")
+                IndicatorType.MACD -> sb.append("input int InpE${n}_F = ${e.fastPeriod}; input int InpE${n}_S = ${e.slowPeriod}; input int InpE${n}_Sig = ${e.period}; input int InpE${n}_DivLB = ${e.divLookback}; input int InpE${n}_DivMin = ${e.divMinStrength};\n")
                 IndicatorType.BOLLINGER -> sb.append("input int InpE${n}_P = ${e.bbPeriod}; input double InpE${n}_Dv = ${e.bbDeviation};\n")
                 IndicatorType.ADX -> sb.append("input int InpE${n}_P = ${e.period}; input double InpE${n}_Lv = ${e.adxLevel};\n")
                 IndicatorType.SAR -> sb.append("input double InpE${n}_St = ${e.sarStep}; input double InpE${n}_Mx = ${e.sarMax};\n")
                 IndicatorType.CCI -> sb.append("input int InpE${n}_P = ${e.period}; input double InpE${n}_OB = ${e.obLevel}; input double InpE${n}_OS = ${e.osLevel};\n")
                 IndicatorType.ATR -> sb.append("input int InpE${n}_P = ${e.atrPeriod}; input double InpE${n}_M = ${e.atrMultiplier};\n")
-                IndicatorType.PRICE_BREAK -> sb.append("input int InpE${n}_LB = ${e.lookbackBars};\n")
+                IndicatorType.PRICE -> sb.append("input int InpE${n}_LB = ${e.lookbackBars};\n")
                 IndicatorType.ICHIMOKU -> sb.append("input int InpE${n}_Tk = ${e.tenkan}; input int InpE${n}_Kj = ${e.kijun}; input int InpE${n}_Sk = ${e.senkou};\n")
                 IndicatorType.ALLIGATOR -> sb.append("input int InpE${n}_J = ${e.jawPeriod}; input int InpE${n}_T = ${e.teethPeriod}; input int InpE${n}_L = ${e.lipsPeriod};\n")
                 IndicatorType.CANDLE_PATTERN -> sb.append("input string InpE${n}_Pat = \"${e.candlePattern}\";\n")
@@ -230,11 +230,11 @@ object Mql5Generator {
         for (r in refs) sb.append("int ${r.name} = INVALID_HANDLE;\n")
         c.entries.filter { it.timeframe != "CURRENT" && it.indicator != IndicatorType.CUSTOM_EXPRESSION && it.indicator != IndicatorType.ICUSTOM }.forEach { e ->
             when (e.indicator) {
-                IndicatorType.MA_CROSS, IndicatorType.MA_TREND, IndicatorType.MA_PRICE -> {
+                IndicatorType.MA, IndicatorType.MA, IndicatorType.PRICE -> {
                     sb.append("int e${e.id}_f = INVALID_HANDLE; int e${e.id}_s = INVALID_HANDLE;\n")
                 }
-                IndicatorType.RSI, IndicatorType.RSI_DIVERGENCE -> sb.append("int e${e.id}_rsi = INVALID_HANDLE;\n")
-                IndicatorType.MACD, IndicatorType.MACD_DIVERGENCE -> sb.append("int e${e.id}_macd = INVALID_HANDLE;\n")
+                IndicatorType.RSI, IndicatorType.RSI -> sb.append("int e${e.id}_rsi = INVALID_HANDLE;\n")
+                IndicatorType.MACD, IndicatorType.MACD -> sb.append("int e${e.id}_macd = INVALID_HANDLE;\n")
                 IndicatorType.STOCH -> sb.append("int e${e.id}_st = INVALID_HANDLE;\n")
                 IndicatorType.BOLLINGER -> sb.append("int e${e.id}_bb = INVALID_HANDLE;\n")
                 IndicatorType.ADX -> sb.append("int e${e.id}_adx = INVALID_HANDLE;\n")
@@ -292,12 +292,12 @@ object Mql5Generator {
         c.entries.filter { it.timeframe != "CURRENT" && it.indicator != IndicatorType.CUSTOM_EXPRESSION && it.indicator != IndicatorType.ICUSTOM }.forEach { e ->
             val tf = tfConst(e.timeframe)
             when (e.indicator) {
-                IndicatorType.MA_CROSS, IndicatorType.MA_TREND, IndicatorType.MA_PRICE -> {
+                IndicatorType.MA, IndicatorType.MA, IndicatorType.PRICE -> {
                     sb.append("   e${e.id}_f = iMA(_Symbol, $tf, InpE${e.id}_F, 0, MODE_SMA, PRICE_CLOSE);\n")
                     sb.append("   e${e.id}_s = iMA(_Symbol, $tf, InpE${e.id}_S, 0, MODE_SMA, PRICE_CLOSE);\n")
                 }
-                IndicatorType.RSI, IndicatorType.RSI_DIVERGENCE -> sb.append("   e${e.id}_rsi = iRSI(_Symbol, $tf, InpE${e.id}_P, PRICE_CLOSE);\n")
-                IndicatorType.MACD, IndicatorType.MACD_DIVERGENCE -> sb.append("   e${e.id}_macd = iMACD(_Symbol, $tf, InpE${e.id}_F, InpE${e.id}_S, InpE${e.id}_Sig, PRICE_CLOSE);\n")
+                IndicatorType.RSI, IndicatorType.RSI -> sb.append("   e${e.id}_rsi = iRSI(_Symbol, $tf, InpE${e.id}_P, PRICE_CLOSE);\n")
+                IndicatorType.MACD, IndicatorType.MACD -> sb.append("   e${e.id}_macd = iMACD(_Symbol, $tf, InpE${e.id}_F, InpE${e.id}_S, InpE${e.id}_Sig, PRICE_CLOSE);\n")
                 IndicatorType.STOCH -> sb.append("   e${e.id}_st = iStochastic(_Symbol, $tf, InpE${e.id}_K, InpE${e.id}_D, InpE${e.id}_Sl, MODE_SMA, STO_LOWHIGH);\n")
                 IndicatorType.BOLLINGER -> sb.append("   e${e.id}_bb = iBands(_Symbol, $tf, InpE${e.id}_P, 0, InpE${e.id}_Dv, PRICE_CLOSE);\n")
                 IndicatorType.ADX -> sb.append("   e${e.id}_adx = iADX(_Symbol, $tf, InpE${e.id}_P);\n")
@@ -315,7 +315,7 @@ object Mql5Generator {
         c.entries.filter { it.multiTF.enabled }.forEach { e ->
             val n = e.id
             when (e.indicator) {
-                IndicatorType.MA_CROSS, IndicatorType.MA_PRICE ->
+                IndicatorType.MA, IndicatorType.PRICE ->
                     sb.append("   e${e.id}_mtf = iMA(_Symbol, InpE${n}_MTF, InpE${n}_F, 0, MODE_SMA, PRICE_CLOSE);\n")
                 IndicatorType.RSI ->
                     sb.append("   e${e.id}_mtf = iRSI(_Symbol, InpE${n}_MTF, InpE${n}_P, PRICE_CLOSE);\n")
@@ -674,7 +674,7 @@ object Mql5Generator {
                     val h = if (mtf) "_T" else ""
                     sb.append("bool EvalEntry${e.id}(string sym) {\n")
                     when (e.indicator) {
-                        IndicatorType.MA_CROSS -> {
+                        IndicatorType.MA -> {
                             sb.append("   double f[2], s[2]; CopyBuffer(e${e.id}${h}_f, 0, 0, 2, f); CopyBuffer(e${e.id}${h}_s, 0, 0, 2, s);\n")
                             when (e.direction) {
                                 "BuyOnly" -> sb.append("   return (f[1] <= s[1] && f[0] > s[0]);\n")
@@ -682,11 +682,11 @@ object Mql5Generator {
                                 else -> sb.append("   return (f[1] <= s[1] && f[0] > s[0]) || (f[1] >= s[1] && f[0] < s[0]);\n")
                             }
                         }
-                        IndicatorType.MA_TREND -> {
+                        IndicatorType.MA -> {
                             sb.append("   double f[1], s[1], m[1]; CopyBuffer(e${e.id}${h}_f, 0, 0, 1, f); CopyBuffer(e${e.id}${h}_s, 0, 0, 1, s); CopyBuffer(e${e.id}${h}_m, 0, 0, 1, m);\n")
                             sb.append("   return (f[0] > s[0] && s[0] > m[0]) || (f[0] < s[0] && s[0] < m[0]);\n")
                         }
-                        IndicatorType.MA_PRICE -> {
+                        IndicatorType.PRICE -> {
                             sb.append("   double ma[1]; CopyBuffer(e${e.id}${h}_f, 0, 0, 1, ma);\n")
                             sb.append("   double p1 = iClose(sym, PERIOD_CURRENT, 1); double p0 = iClose(sym, PERIOD_CURRENT, 0);\n")
                             when (e.direction) {
@@ -703,7 +703,7 @@ object Mql5Generator {
                                 else -> sb.append("   return (r[0] < InpE${n}_OS) || (r[0] > InpE${n}_OB);\n")
                             }
                         }
-                        IndicatorType.RSI_DIVERGENCE -> {
+                        IndicatorType.RSI -> {
                             sb.append("   double rsi[100]; CopyBuffer(e${e.id}${h}_rsi, 0, 0, InpE${n}_DivLB + 1, rsi);\n")
                             sb.append("   double hh = iHigh(sym, PERIOD_CURRENT, iHighest(sym, PERIOD_CURRENT, MODE_HIGH, InpE${n}_DivLB, 1));\n")
                             sb.append("   double ll = iLow(sym, PERIOD_CURRENT, iLowest(sym, PERIOD_CURRENT, MODE_LOW, InpE${n}_DivLB, 1));\n")
@@ -714,7 +714,7 @@ object Mql5Generator {
                             sb.append("   double m[2], g[2]; CopyBuffer(e${e.id}${h}_macd, 0, 0, 2, m); CopyBuffer(e${e.id}${h}_macd, 1, 0, 2, g);\n")
                             sb.append("   return (m[1] <= g[1] && m[0] > g[0]) || (m[1] >= g[1] && m[0] < g[0]);\n")
                         }
-                        IndicatorType.MACD_DIVERGENCE -> {
+                        IndicatorType.MACD -> {
                             sb.append("   double macd[100]; CopyBuffer(e${e.id}${h}_macd, 0, 0, InpE${n}_DivLB + 1, macd);\n")
                             sb.append("   double hh = iHigh(sym, PERIOD_CURRENT, iHighest(sym, PERIOD_CURRENT, MODE_HIGH, InpE${n}_DivLB, 1));\n")
                             sb.append("   double ll = iLow(sym, PERIOD_CURRENT, iLowest(sym, PERIOD_CURRENT, MODE_LOW, InpE${n}_DivLB, 1));\n")
@@ -738,7 +738,7 @@ object Mql5Generator {
                         IndicatorType.ATR -> {
                             sb.append("   double a[1]; CopyBuffer(e${e.id}${h}_atr, 0, 0, 1, a);\n   double r = (iHigh(sym, PERIOD_CURRENT, 1) - iLow(sym, PERIOD_CURRENT, 1)) / _Point;\n   return (r > a[0] * InpE${n}_M / SymbolInfoDouble(sym, SYMBOL_POINT));\n")
                         }
-                        IndicatorType.PRICE_BREAK -> {
+                        IndicatorType.PRICE -> {
                             sb.append("   double hh = iHigh(sym, PERIOD_CURRENT, iHighest(sym, PERIOD_CURRENT, MODE_HIGH, InpE${n}_LB, 1)); double ll = iLow(sym, PERIOD_CURRENT, iLowest(sym, PERIOD_CURRENT, MODE_LOW, InpE${n}_LB, 1));\n")
                             when (e.direction) {
                                 "BuyOnly" -> sb.append("   return (Ask > hh);\n")
@@ -920,4 +920,3 @@ object Mql5Generator {
 
     fun appendFooter(sb: StringBuilder) { sb.append("//+------------------------------------------------------------------+\n") }
 }
-
