@@ -79,14 +79,11 @@ object Mql5Generator {
                 IndicatorType.CUSTOM_EXPRESSION -> sb.append("input string InpE${n}_Expr = \"\"; // MQL条件表达式\n")
                 IndicatorType.MA, IndicatorType.MA, IndicatorType.PRICE -> {
                     sb.append("input int InpE${n}_F = ${e.fastPeriod}; input int InpE${n}_S = ${e.slowPeriod};\n")
-                    if (e.indicator == IndicatorType.MA) sb.append("input int InpE${n}_M = ${e.midPeriod};\n")
                     sb.append("input ENUM_MA_METHOD InpE${n}_MAM = MODE_${e.maMethod.uppercase()};\n")
                 }
                 IndicatorType.RSI -> sb.append("input int InpE${n}_P = ${e.period}; input double InpE${n}_OB = ${e.obLevel}; input double InpE${n}_OS = ${e.osLevel};\n")
-                IndicatorType.RSI -> sb.append("input int InpE${n}_P = ${e.period}; input int InpE${n}_DivLB = ${e.divLookback}; input int InpE${n}_DivMin = ${e.divMinStrength};\n")
                 IndicatorType.STOCH -> sb.append("input int InpE${n}_K = ${e.kPeriod}; input int InpE${n}_D = ${e.dPeriod}; input int InpE${n}_Sl = ${e.slowing}; input double InpE${n}_OB = ${e.obLevel}; input double InpE${n}_OS = ${e.osLevel};\n")
                 IndicatorType.MACD -> sb.append("input int InpE${n}_F = ${e.fastPeriod}; input int InpE${n}_S = ${e.slowPeriod}; input int InpE${n}_Sig = ${e.period};\n")
-                IndicatorType.MACD -> sb.append("input int InpE${n}_F = ${e.fastPeriod}; input int InpE${n}_S = ${e.slowPeriod}; input int InpE${n}_Sig = ${e.period}; input int InpE${n}_DivLB = ${e.divLookback}; input int InpE${n}_DivMin = ${e.divMinStrength};\n")
                 IndicatorType.BOLLINGER -> sb.append("input int InpE${n}_P = ${e.bbPeriod}; input double InpE${n}_Dv = ${e.bbDeviation};\n")
                 IndicatorType.ADX -> sb.append("input int InpE${n}_P = ${e.period}; input double InpE${n}_Lv = ${e.adxLevel};\n")
                 IndicatorType.SAR -> sb.append("input double InpE${n}_St = ${e.sarStep}; input double InpE${n}_Mx = ${e.sarMax};\n")
